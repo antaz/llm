@@ -5,8 +5,6 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
 
-require "rubocop/rake_task"
+require "standard/rake"
 
-RuboCop::RakeTask.new
-
-task default: %i[spec rubocop]
+task default: %i[spec standard]
