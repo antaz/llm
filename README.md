@@ -5,3 +5,8 @@ This library offers a unified API to interact with multiple LLM providers, simpl
 ## Install
 
 ## Use
+
+```ruby
+openai = LLM::OpenAI(secret)
+openai.complete("Hello")
+```
