@@ -2,5 +2,11 @@
 
 module LLM
   class Adapter
+    def initialize(secret)
+      @secret = secret
+    end
+
+    def complete(prompt)
+    end
   end
 end
