@@ -72,7 +72,6 @@ DEPENDENCIES
   LLM!
   rake (~> 13.0)
   rspec (~> 3.0)
-  rubocop (~> 1.21)
   standard (~> 1.40)
 
 BUNDLED WITH
