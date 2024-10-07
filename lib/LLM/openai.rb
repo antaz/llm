@@ -6,36 +6,40 @@ require "json"
 
 module LLM
   class OpenAI < Adapter
-    URL = "https://api.openai.com/v1"
+    BASE_URL = "https://api.openai.com/v1"
+    ENDPOINT = "/chat/completions"
     DEFAULT_PARAMS = {
       model: "gpt-4o-mini",
       temperature: 0.7
-    }
+    }.freeze
+
+    attr_reader :http
 
     def initialize(secret)
+      @uri = URI.parse("#{BASE_URL}#{ENDPOINT}")
+      @http = Net::HTTP.new(@uri.host, @uri.port).tap do |http|
+        http.use_ssl = true
+        http.extend(HTTPClient)
+      end
       super
     end
 
-    def complete(prompt, params = DEFAULT_PARAMS)
-      uri = URI.parse("#{URL}/chat/completions")
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-
-      headers = {
-        "Content-Type" => "application/json",
-        "Authorization" => "Bearer #{@secret}"
+    def complete(prompt, params = {})
+      body = {
+        messages: [{role: "user", content: prompt}],
+        **DEFAULT_PARAMS,
+        **params
       }
 
-      request = Net::HTTP::Post.new(uri.path, headers)
-
-      request.body = {messages: [{role: "user", content: prompt}]}.merge(params).to_json
-
-      response = http.request(request)
-
-      if response.is_a?(Net::HTTPSuccess)
-        JSON.parse(response.body)["choices"][0]["message"]["content"]
+      response = @http.request(@uri, @secret, body)
+      case response
+      when Net::HTTPSuccess
+        choices = JSON.parse(response.body)["choices"]
+        choices.map { |choice| {role: choice["message"]["role"], message: choice["message"]["content"]} }
+      when Net::HTTPUnauthorized
+        raise "Authentication Error"
       else
-        raise "API request failed with status #{response.code}: #{response.message}"
+        raise "HTTP Error: #{response.code} - #{response.message}"
       end
     end
   end
