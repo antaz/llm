@@ -27,6 +27,6 @@ RSpec.describe LLM::OpenAI do
         body: File.read(File.join(File.dirname(__FILE__), "fixtures", "openai_keyerror.json")),
         headers: {"Content-Type" => "application/json"}
       )
-    expect { openai.complete("Hello!") }.to raise_error("Authentication Error")
+    expect { openai.complete("Hello!") }.to raise_error(LLM::AuthError)
   end
 end

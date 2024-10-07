@@ -7,5 +7,16 @@ require_relative "LLM/openai"
 
 module LLM
   class Error < StandardError; end
-  # Your code goes here...
+
+  class AuthError < StandardError
+    def initialize(msg = "Authentication failed")
+      super
+    end
+  end
+
+  class NetError < StandardError
+    def initialize(msg = "A network error occurred")
+      super
+    end
+  end
 end

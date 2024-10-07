@@ -37,9 +37,9 @@ module LLM
         choices = JSON.parse(response.body)["choices"]
         choices.map { |choice| {role: choice["message"]["role"], message: choice["message"]["content"]} }
       when Net::HTTPUnauthorized
-        raise "Authentication Error"
+        raise LLM::AuthError
       else
-        raise "HTTP Error: #{response.code} - #{response.message}"
+        raise LLM::NetError
       end
     end
   end
