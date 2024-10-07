@@ -4,9 +4,15 @@ This library offers a unified API to interact with multiple LLM providers, simpl
 
 ## Install
 
-## Use
+## Usage
 
 ```ruby
-openai = LLM::OpenAI(secret)
+openai = LLM::OpenAI(SECRET_TOKEN)
 openai.complete("Hello")
+```
+
+```
+[
+  {:role=>"assistant", :message=>"Hello! How can I assist you today?"}
+]
 ```
