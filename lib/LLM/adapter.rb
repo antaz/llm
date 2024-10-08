@@ -7,6 +7,7 @@ module LLM
     end
 
     def complete(prompt)
+      raise NotImplementedError
     end
   end
 end
