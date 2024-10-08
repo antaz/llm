@@ -7,13 +7,19 @@ module LLM
   class Error < StandardError; end
 
   class AuthError < StandardError
-    def initialize(msg = "Authentication failed")
+    def initialize(msg = "Authentication Error")
       super
     end
   end
 
   class NetError < StandardError
-    def initialize(msg = "A network error occurred")
+    def initialize(msg = "Network Error")
+      super
+    end
+  end
+
+  class ParseError < StandardError
+    def initialize(msg = "Parsing Error")
       super
     end
   end
