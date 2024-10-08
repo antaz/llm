@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-require "net/http"
-require "uri"
-require "json"
-
 module LLM
+  require "net/http"
+  require "uri"
+  require "json"
+  require "LLM/http/client"
+  require "LLM/adapter"
+  require "LLM/response"
+
   class OpenAI < Adapter
     BASE_URL = "https://api.openai.com/v1"
     ENDPOINT = "/chat/completions"
@@ -35,7 +38,7 @@ module LLM
       case response
       when Net::HTTPSuccess
         choices = JSON.parse(response.body)["choices"]
-        choices.map { |choice| {role: choice["message"]["role"], message: choice["message"]["content"]} }
+        choices.map { |choice| Response.new(choice["message"]["role"], choice["message"]["content"]) }
       when Net::HTTPUnauthorized
         raise LLM::AuthError
       else
