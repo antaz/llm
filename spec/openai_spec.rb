@@ -2,7 +2,7 @@
 
 require "webmock/rspec"
 require "LLM/providers/openai"
-require "LLM/response"
+require "LLM/choice"
 
 RSpec.describe LLM::OpenAI do
   subject(:openai) { LLM::OpenAI.new("") }

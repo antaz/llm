@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LLM
-  class Response
+  class Choice
     attr_accessor :role, :message
 
     def initialize(role, message)

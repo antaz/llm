@@ -6,7 +6,7 @@ module LLM
   require "json"
   require "LLM/http/client"
   require "LLM/adapter"
-  require "LLM/response"
+  require "LLM/choice"
 
   class OpenAI < Adapter
     BASE_URL = "https://api.openai.com/v1"
@@ -35,14 +35,9 @@ module LLM
       }
 
       response = @http.request(@uri, @secret, body)
-      case response
-      when Net::HTTPSuccess
-        choices = JSON.parse(response.body)["choices"]
-        choices.map { |choice| Response.new(choice["message"]["role"], choice["message"]["content"]) }
-      when Net::HTTPUnauthorized
-        raise LLM::AuthError
-      else
-        raise LLM::NetError
+
+      JSON.parse(response.body)["choices"].map do |choice|
+        Choice.new(choice.dig("message", "role"), choice.dig("message", "content"))
       end
     end
   end
