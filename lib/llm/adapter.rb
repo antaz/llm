@@ -9,5 +9,11 @@ module LLM
     def complete(prompt)
       raise NotImplementedError
     end
+
+    private
+
+    def auth(req)
+      raise NotImplementedError
+    end
   end
 end
