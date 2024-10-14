@@ -32,9 +32,11 @@ module LLM
       auth(req)
       res = @http.post(req)
 
-      JSON.parse(res.body)["candidates"].map do |candidate|
-        Message.new(candidate.dig("content", "role"), candidate.dig("content", "parts")[0].dig("text"))
-      end
+      Response.new(
+        JSON.parse(res.body)["candidates"].map { |candidate|
+          Message.new(candidate.dig("content", "role"), candidate.dig("content", "parts", 0, "text"))
+        }
+      )
     end
 
     private

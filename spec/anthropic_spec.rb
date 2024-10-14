@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
-require "llm/providers/anthropic"
-require "llm/message"
 
 RSpec.describe LLM::Anthropic do
   subject(:anthropic) { LLM::Anthropic.new("") }
@@ -49,12 +47,12 @@ RSpec.describe LLM::Anthropic do
   end
 
   it "Returns a successful completion", :success do
-    expect(anthropic.complete("Hello, world")).to match([
-      have_attributes(
-        role: "assistant",
-        content: "Hi! My name is Claude."
-      )
-    ])
+    response = anthropic.complete("Hello, world")
+    expect(response).to be_a(LLM::Response)
+    expect(response.messages.first).to have_attributes(
+      role: "assistant",
+      content: "Hi! My name is Claude."
+    )
   end
 
   it "Returns an authentication error", :auth_error do

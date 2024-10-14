@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
-require "llm/providers/anthropic"
-require "llm/message"
 
 RSpec.describe LLM::Gemini do
   subject(:gemini) { LLM::Gemini.new("") }
@@ -80,12 +78,12 @@ RSpec.describe LLM::Gemini do
   end
 
   it "Returns a successful completion", :success do
-    expect(gemini.complete("Hello, world")).to match([
-      have_attributes(
-        role: "model",
-        content: "Hello! How can I help you today? \n"
-      )
-    ])
+    response = gemini.complete("Hello, world")
+    expect(response).to be_a(LLM::Response)
+    expect(response.messages.first).to have_attributes(
+      role: "model",
+      content: "Hello! How can I help you today? \n"
+    )
   end
 
   it "Returns an authentication error", :auth_error do

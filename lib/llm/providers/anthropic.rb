@@ -7,6 +7,7 @@ module LLM
   require "llm/http/client"
   require "llm/adapter"
   require "llm/message"
+  require "llm/response"
 
   class Anthropic < Adapter
     BASE_URL = "https://api.anthropic.com/v1"
@@ -34,11 +35,12 @@ module LLM
       req.content_type = "application/json"
       req.body = JSON.generate(body)
       auth(req)
+
       res = @http.post(req)
 
-      JSON.parse(res.body)["content"].map do |content|
+      Response.new(JSON.parse(res.body)["content"].map { |content|
         Message.new("assistant", content.dig("text"))
-      end
+      })
     end
 
     private

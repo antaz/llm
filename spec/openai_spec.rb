@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
-require "llm/providers/openai"
-require "llm/message"
 
 RSpec.describe LLM::OpenAI do
   subject(:openai) { LLM::OpenAI.new("") }
@@ -62,12 +60,14 @@ RSpec.describe LLM::OpenAI do
   end
 
   it "Returns a successful completion", :success do
-    expect(openai.complete("Hello!")).to match([
-      have_attributes(
-        role: "assistant",
-        content: "Hello! How can I assist you today?"
-      )
-    ])
+    expect(openai.complete("Hello!")).to be_a(LLM::Response).and have_attributes(
+      messages: [
+        have_attributes(
+          role: "assistant",
+          content: "Hello! How can I assist you today?"
+        )
+      ]
+    )
   end
 
   it "Returns an authentication error", :auth_error do
