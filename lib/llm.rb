@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "LLM/version"
-require_relative "LLM/providers/openai"
+require_relative "llm/version"
+require_relative "llm/providers/openai"
 
 module LLM
   class Error < StandardError; end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "LLM/adapter"
+require "llm/adapter"
 
 RSpec.describe LLM::Adapter do
 end

@@ -4,9 +4,9 @@ module LLM
   require "net/http"
   require "uri"
   require "json"
-  require "LLM/http/client"
-  require "LLM/adapter"
-  require "LLM/choice"
+  require "llm/http/client"
+  require "llm/adapter"
+  require "llm/choice"
 
   class OpenAI < Adapter
     BASE_URL = "https://api.openai.com/v1"
