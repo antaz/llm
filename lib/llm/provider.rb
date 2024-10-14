@@ -2,7 +2,7 @@
 
 module LLM
   class Provider
-    def initialize(secret, host, port)
+    def initialize(secret, host, port = 443)
       @secret = secret
       @http = Net::HTTP.new(host, port).tap do |http|
         http.use_ssl = true

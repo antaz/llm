@@ -10,7 +10,6 @@ module LLM
 
   class OpenAI < Provider
     HOST = "api.openai.com"
-    PORT = 443
     PATH = "/v1"
 
     DEFAULT_PARAMS = {
@@ -18,7 +17,7 @@ module LLM
     }.freeze
 
     def initialize(secret)
-      super(secret, HOST, PORT)
+      super(secret, HOST)
     end
 
     def complete(prompt, params = {})

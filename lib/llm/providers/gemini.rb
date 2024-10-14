@@ -9,11 +9,10 @@ module LLM
 
   class Gemini < Provider
     HOST = "generativelanguage.googleapis.com"
-    PORT = 443
     PATH = "/v1beta/models/gemini-1.5-flash"
 
     def initialize(secret)
-      super(secret, HOST, PORT)
+      super(secret, HOST)
     end
 
     def complete(prompt, params = {})
