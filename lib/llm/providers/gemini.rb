@@ -2,18 +2,18 @@
 
 module LLM
   require "net/http"
-  require "uri"
   require "json"
   require "llm/http/client"
   require "llm/adapter"
   require "llm/message"
 
   class Gemini < Adapter
-    BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash"
+    HOST = "generativelanguage.googleapis.com"
+    PORT = 443
+    PATH = "/v1beta/models/gemini-1.5-flash"
 
     def initialize(secret)
-      @uri = URI.parse(BASE_URL)
-      @http = Net::HTTP.new(@uri.host, @uri.port).tap do |http|
+      @http = Net::HTTP.new(HOST, PORT).tap do |http|
         http.use_ssl = true
         http.extend(HTTPClient)
       end
@@ -21,7 +21,7 @@ module LLM
     end
 
     def complete(prompt, params = {})
-      req = Net::HTTP::Post.new("#{@uri}:generateContent")
+      req = Net::HTTP::Post.new [PATH, "generateContent"].join(":")
 
       body = {
         contents: [{parts: [{text: prompt}]}]
@@ -41,7 +41,7 @@ module LLM
     private
 
     def auth(req)
-      req.path.replace "#{req.path}?#{URI.encode_www_form(key: @secret)}"
+      req.path.replace [req.path, URI.encode_www_form(key: @secret)].join("?")
     end
   end
 end

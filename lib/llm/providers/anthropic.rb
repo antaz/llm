@@ -2,7 +2,6 @@
 
 module LLM
   require "net/http"
-  require "uri"
   require "json"
   require "llm/http/client"
   require "llm/adapter"
@@ -10,14 +9,16 @@ module LLM
   require "llm/response"
 
   class Anthropic < Adapter
-    BASE_URL = "https://api.anthropic.com/v1"
+    HOST = "api.anthropic.com"
+    PORT = 443
+    PATH = "/v1"
+
     DEFAULT_PARAMS = {
       model: "claude-3-5-sonnet-20240620"
     }.freeze
 
     def initialize(secret)
-      @uri = URI.parse(BASE_URL)
-      @http = Net::HTTP.new(@uri.host, @uri.port).tap do |http|
+      @http = Net::HTTP.new(HOST, PORT).tap do |http|
         http.use_ssl = true
         http.extend(HTTPClient)
       end
@@ -31,7 +32,7 @@ module LLM
         **params
       }
 
-      req = Net::HTTP::Post.new("#{@uri}/messages")
+      req = Net::HTTP::Post.new [PATH, "messages"].join("/")
       req.body = JSON.generate(body)
       auth(req)
 
