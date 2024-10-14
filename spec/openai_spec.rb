@@ -44,7 +44,7 @@ RSpec.describe LLM::OpenAI do
       )
   end
 
-  before(:each, :auth_error) do
+  before(:each, :unauthorized) do
     stub_request(:post, "https://api.openai.com/v1/chat/completions")
       .with(headers: {"Content-Type" => "application/json"})
       .to_return(
@@ -61,7 +61,7 @@ RSpec.describe LLM::OpenAI do
       )
   end
 
-  it "Returns a successful completion", :success do
+  it "returns a successful completion", :success do
     expect(openai.complete("Hello!")).to be_a(LLM::Response).and have_attributes(
       messages: [
         have_attributes(
@@ -72,7 +72,15 @@ RSpec.describe LLM::OpenAI do
     )
   end
 
-  it "Returns an authentication error", :auth_error do
-    expect { openai.complete("Hello!") }.to raise_error(LLM::AuthError)
+  context "with an unauthorized error", :unauthorized do
+    it "raises an error" do
+      expect { openai.complete("Hello!") }.to raise_error(LLM::Error::Unauthorized)
+    end
+
+    it "includes the response" do
+      openai.complete("Hello!")
+    rescue LLM::Error::Unauthorized => ex
+      expect(ex.response).to be_kind_of(Net::HTTPResponse)
+    end
   end
 end

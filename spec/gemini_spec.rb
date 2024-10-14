@@ -89,6 +89,6 @@ RSpec.describe LLM::Gemini do
   end
 
   it "Returns an authentication error", :auth_error do
-    expect { gemini.complete("Hello!") }.to raise_error(LLM::AuthError)
+    expect { gemini.complete("Hello!") }.to raise_error(LLM::Error::Unauthorized)
   end
 end
