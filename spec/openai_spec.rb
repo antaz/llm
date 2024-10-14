@@ -2,7 +2,7 @@
 
 require "webmock/rspec"
 require "llm/providers/openai"
-require "llm/choice"
+require "llm/message"
 
 RSpec.describe LLM::OpenAI do
   subject(:openai) { LLM::OpenAI.new("") }
@@ -29,7 +29,7 @@ RSpec.describe LLM::OpenAI do
     expect(openai.complete("Hello!")).to match([
       have_attributes(
         role: "assistant",
-        message: "Hello! How can I assist you today?"
+        content: "Hello! How can I assist you today?"
       )
     ])
   end

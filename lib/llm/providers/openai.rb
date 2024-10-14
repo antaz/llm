@@ -6,7 +6,7 @@ module LLM
   require "json"
   require "llm/http/client"
   require "llm/adapter"
-  require "llm/choice"
+  require "llm/message"
 
   class OpenAI < Adapter
     BASE_URL = "https://api.openai.com/v1"
@@ -37,7 +37,7 @@ module LLM
       response = @http.request(@uri, @secret, body)
 
       JSON.parse(response.body)["choices"].map do |choice|
-        Choice.new(choice.dig("message", "role"), choice.dig("message", "content"))
+        Message.new(choice.dig("message", "role"), choice.dig("message", "content"))
       end
     end
   end
