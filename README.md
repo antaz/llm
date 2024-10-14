@@ -7,8 +7,18 @@ This library offers a unified API to interact with multiple LLM providers, simpl
 ## Usage
 
 ```ruby
-openai = LLM::OpenAI(SECRET_TOKEN)
-response = openai.complete("Hello")
+LLM::OpenAI(SECRET_TOKEN).complete("Hello")
 
-[#<LLM::Choice:0x00007237ddbb6250 @message="Hello! How can I assist you today?", @role="assistant">]
+=> [#<LLM::Message:0x00007857a3ec8bc8 @content="Hello! How can I assist you today?", @role="assistant">]
 ```
+
+## Available providers
+
+- [x] Anthropic
+- [x] OpenAI
+- [x] Gemini
+- [ ] Hugging Face
+- [ ] Cohere
+- [ ] AI21 Labs
+- [ ] Replicate
+- [ ] Mistral AI
