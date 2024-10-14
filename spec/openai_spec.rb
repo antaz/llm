@@ -11,7 +11,36 @@ RSpec.describe LLM::OpenAI do
     stub_request(:post, "https://api.openai.com/v1/chat/completions")
       .to_return(
         status: 200,
-        body: File.read(File.join(File.dirname(__FILE__), "fixtures", "openai_success.json")),
+        body: '{
+          "id": "chatcmpl-AFIwpAMVniQWeOJZDYZ1IZpcf8zQa",
+          "object": "chat.completion",
+          "created": 1728211119,
+          "model": "gpt-4o-mini-2024-07-18",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Hello! How can I assist you today?",
+                "refusal": null
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 9,
+            "completion_tokens": 9,
+            "total_tokens": 18,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "system_fingerprint": "fp_f85bea6784"
+        }',
         headers: {"Content-Type" => "application/json"}
       )
   end
@@ -20,7 +49,14 @@ RSpec.describe LLM::OpenAI do
     stub_request(:post, "https://api.openai.com/v1/chat/completions")
       .to_return(
         status: 401,
-        body: File.read(File.join(File.dirname(__FILE__), "fixtures", "openai_keyerror.json")),
+        body: '{
+          "error": {
+            "message": "Incorrect API key provided: sk-6WQZM***************************************t6ea. You can find your API key a t https://platform.openai.com/account/api-keys.",
+            "type": "invalid_request_error",
+            "param": null,
+            "code": "invalid_api_key"
+          }
+          }',
         headers: {"Content-Type" => "application/json"}
       )
   end
