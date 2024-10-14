@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module LLM
+  require "llm/error"
+
   module HTTPClient
     def post(req)
       req.content_type = "application/json"
