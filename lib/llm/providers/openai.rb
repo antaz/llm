@@ -2,7 +2,6 @@
 
 module LLM
   require "net/http"
-  require "uri"
   require "json"
   require "llm/http/client"
   require "llm/adapter"
@@ -10,17 +9,20 @@ module LLM
   require "llm/response"
 
   class OpenAI < Adapter
-    BASE_URL = "https://api.openai.com/v1"
+    HOST = "api.openai.com"
+    PORT = 443
+    PATH = "/v1"
+
     DEFAULT_PARAMS = {
       model: "gpt-4o-mini"
     }.freeze
 
     def initialize(secret)
-      super(secret, BASE_URL)
+      super(secret, HOST, PORT)
     end
 
     def complete(prompt, params = {})
-      req = Net::HTTP::Post.new("#{@uri}/chat/completions")
+      req = Net::HTTP::Post.new [PATH, "chat", "completions"].join("/")
 
       body = {
         messages: [{role: "user", content: prompt}],
