@@ -4,19 +4,20 @@ module LLM
   module HTTPClient
     def post(req)
       req.content_type = "application/json"
-      response = request(req)
-      response.value
-      response
-    rescue Net::HTTPUnauthorized, Net::HTTPClientException
-      error = LLM::AuthError.new("Authentication Error")
-      error.tap { _1.response = response }
-      raise error
-    rescue SystemCallError
-      raise LLM::NetError
-    rescue JSON::ParserError
-      raise LLM::ParseError
-    rescue => e
-      raise LLM::Error, "Unexpected Error: #{e.message}"
+      res = request(req)
+      res.tap(&:value)
+    rescue Net::HTTPClientException
+      if [
+        Net::HTTPBadRequest,   # Gemini (huh?)
+        Net::HTTPForbidden,    # Anthropic
+        Net::HTTPUnauthorized  # OpenAI
+      ].any? { _1 === res }
+        raise LLM::Error::Unauthorized.new { _1.response = res }, "Authentication error"
+      elsif Net::HTTPTooManyRequests === res
+        raise LLM::Error::RateLimit.new { _1.response = res }, "Too many requests"
+      else
+        raise LLM::Error::HTTPError.new { _1.response = res }, "Unexpected response"
+      end
     end
   end
 end

@@ -74,12 +74,12 @@ RSpec.describe LLM::OpenAI do
 
   context "with an unauthorized error", :unauthorized do
     it "raises an error" do
-      expect { openai.complete("Hello!") }.to raise_error(LLM::AuthError)
+      expect { openai.complete("Hello!") }.to raise_error(LLM::Error::Unauthorized)
     end
 
     it "includes the response" do
       openai.complete("Hello!")
-    rescue LLM::AuthError => ex
+    rescue LLM::Error::Unauthorized => ex
       expect(ex.response).to be_kind_of(Net::HTTPResponse)
     end
   end

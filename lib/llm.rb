@@ -6,28 +6,28 @@ require_relative "llm/providers/anthropic"
 require_relative "llm/providers/gemini"
 
 module LLM
-  class Error < StandardError; end
+  ##
+  # The superclass of all LLM errors
+  class Error < RuntimeError
+    def initialize
+      block_given? ? yield(self) : nil
+    end
 
-  class AuthError < Error
     ##
-    # @return [Net::HTTPResponse]
-    #  Returns the response associated with an error
-    attr_accessor :response
-
-    def initialize(msg = "Authentication Error")
-      super
+    # The superclass of all HTTP protocol errors
+    class HTTPError < Error
+      ##
+      # @return [Net::HTTPResponse]
+      #  Returns the response associated with an error
+      attr_accessor :response
     end
-  end
 
-  class NetError < Error
-    def initialize(msg = "Network Error")
-      super
-    end
-  end
+    ##
+    # HTTPUnauthorized
+    Unauthorized = Class.new(HTTPError)
 
-  class ParseError < Error
-    def initialize(msg = "Parsing Error")
-      super
-    end
+    ##
+    # HTTPTooManyRequests
+    RateLimit = Class.new(HTTPError)
   end
 end
