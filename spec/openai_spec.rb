@@ -7,6 +7,7 @@ RSpec.describe LLM::OpenAI do
 
   before(:each, :success) do
     stub_request(:post, "https://api.openai.com/v1/chat/completions")
+      .with(headers: {"Content-Type" => "application/json"})
       .to_return(
         status: 200,
         body: '{
@@ -45,6 +46,7 @@ RSpec.describe LLM::OpenAI do
 
   before(:each, :auth_error) do
     stub_request(:post, "https://api.openai.com/v1/chat/completions")
+      .with(headers: {"Content-Type" => "application/json"})
       .to_return(
         status: 401,
         body: '{

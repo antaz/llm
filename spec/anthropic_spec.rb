@@ -7,6 +7,7 @@ RSpec.describe LLM::Anthropic do
 
   before(:each, :success) do
     stub_request(:post, "https://api.anthropic.com/v1/messages")
+      .with(headers: {"Content-Type" => "application/json"})
       .to_return(
         status: 200,
         body: '{
@@ -33,6 +34,7 @@ RSpec.describe LLM::Anthropic do
 
   before(:each, :auth_error) do
     stub_request(:post, "https://api.anthropic.com/v1/messages")
+      .with(headers: {"Content-Type" => "application/json"})
       .to_return(
         status: 403,
         body: '{

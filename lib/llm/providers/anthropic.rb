@@ -32,7 +32,6 @@ module LLM
       }
 
       req = Net::HTTP::Post.new("#{@uri}/messages")
-      req.content_type = "application/json"
       req.body = JSON.generate(body)
       auth(req)
 

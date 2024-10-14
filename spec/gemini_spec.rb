@@ -7,6 +7,7 @@ RSpec.describe LLM::Gemini do
 
   before(:each, :success) do
     stub_request(:post, "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=")
+      .with(headers: {"Content-Type" => "application/json"})
       .to_return(
         status: 200,
         body: '{
@@ -54,6 +55,7 @@ RSpec.describe LLM::Gemini do
 
   before(:each, :auth_error) do
     stub_request(:post, "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=")
+      .with(headers: {"Content-Type" => "application/json"})
       .to_return(
         status: 400,
         body: '{

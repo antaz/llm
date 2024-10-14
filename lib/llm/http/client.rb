@@ -3,6 +3,7 @@
 module LLM
   module HTTPClient
     def post(req)
+      req.content_type = "application/json"
       response = request(req)
       response.value
       response

@@ -33,7 +33,6 @@ module LLM
         **params
       }
 
-      req.content_type = "application/json"
       req.body = JSON.generate(body)
       auth(req)
 
