@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
-require "LLM/providers/openai"
-require "LLM/choice"
+require "llm/providers/openai"
+require "llm/choice"
 
 RSpec.describe LLM::OpenAI do
   subject(:openai) { LLM::OpenAI.new("") }
