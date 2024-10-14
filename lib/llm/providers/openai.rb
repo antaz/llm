@@ -10,16 +10,12 @@ module LLM
 
   class OpenAI < Adapter
     BASE_URL = "https://api.openai.com/v1"
-    ENDPOINT = "/chat/completions"
     DEFAULT_PARAMS = {
-      model: "gpt-4o-mini",
-      temperature: 0.7
+      model: "gpt-4o-mini"
     }.freeze
 
-    attr_reader :http
-
     def initialize(secret)
-      @uri = URI.parse("#{BASE_URL}#{ENDPOINT}")
+      @uri = URI.parse(BASE_URL)
       @http = Net::HTTP.new(@uri.host, @uri.port).tap do |http|
         http.use_ssl = true
         http.extend(HTTPClient)
@@ -28,17 +24,29 @@ module LLM
     end
 
     def complete(prompt, params = {})
+      req = Net::HTTP::Post.new("#{@uri}/chat/completions")
+
       body = {
         messages: [{role: "user", content: prompt}],
         **DEFAULT_PARAMS,
         **params
       }
 
-      response = @http.request(@uri, @secret, body)
+      req.content_type = "application/json"
+      req.body = JSON.generate(body)
+      auth(req)
+
+      response = @http.post(req)
 
       JSON.parse(response.body)["choices"].map do |choice|
         Message.new(choice.dig("message", "role"), choice.dig("message", "content"))
       end
+    end
+
+    private
+
+    def auth(req)
+      req["Authorization"] = "Bearer #{@secret}"
     end
   end
 end
