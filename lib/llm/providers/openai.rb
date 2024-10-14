@@ -4,11 +4,11 @@ module LLM
   require "net/http"
   require "json"
   require "llm/http/client"
-  require "llm/adapter"
+  require "llm/provider"
   require "llm/message"
   require "llm/response"
 
-  class OpenAI < Adapter
+  class OpenAI < Provider
     HOST = "api.openai.com"
     PORT = 443
     PATH = "/v1"

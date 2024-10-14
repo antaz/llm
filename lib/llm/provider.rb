@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LLM
-  class Adapter
+  class Provider
     def initialize(secret, host, port)
       @secret = secret
       @http = Net::HTTP.new(host, port).tap do |http|
