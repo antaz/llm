@@ -12,12 +12,7 @@ module LLM
     BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash"
 
     def initialize(secret)
-      @uri = URI.parse(BASE_URL)
-      @http = Net::HTTP.new(@uri.host, @uri.port).tap do |http|
-        http.use_ssl = true
-        http.extend(HTTPClient)
-      end
-      super
+      super(secret, BASE_URL)
     end
 
     def complete(prompt, params = {})

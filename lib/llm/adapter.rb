@@ -2,8 +2,13 @@
 
 module LLM
   class Adapter
-    def initialize(secret)
+    def initialize(secret, uri)
+      @uri = URI.parse(uri)
       @secret = secret
+      @http = Net::HTTP.new(@uri.host, @uri.port).tap do |http|
+        http.use_ssl = true
+        http.extend(HTTPClient)
+      end
     end
 
     def complete(prompt)
