@@ -8,7 +8,9 @@ module LLM
       response.value
       response
     rescue Net::HTTPUnauthorized, Net::HTTPClientException
-      raise LLM::AuthError
+      error = LLM::AuthError.new("Authentication Error")
+      error.tap { _1.response = response }
+      raise error
     rescue SystemCallError
       raise LLM::NetError
     rescue JSON::ParserError

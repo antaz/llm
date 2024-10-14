@@ -8,19 +8,24 @@ require_relative "llm/providers/gemini"
 module LLM
   class Error < StandardError; end
 
-  class AuthError < StandardError
+  class AuthError < Error
+    ##
+    # @return [Net::HTTPResponse]
+    #  Returns the response associated with an error
+    attr_accessor :response
+
     def initialize(msg = "Authentication Error")
       super
     end
   end
 
-  class NetError < StandardError
+  class NetError < Error
     def initialize(msg = "Network Error")
       super
     end
   end
 
-  class ParseError < StandardError
+  class ParseError < Error
     def initialize(msg = "Parsing Error")
       super
     end
