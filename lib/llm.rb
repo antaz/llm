@@ -2,6 +2,7 @@
 
 require_relative "llm/version"
 require_relative "llm/providers/openai"
+require_relative "llm/providers/gemini"
 
 module LLM
   class Error < StandardError; end
