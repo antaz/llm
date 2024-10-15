@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
-require "llm/providers/anthropic"
 
-RSpec.describe LLM::Anthropic do
+RSpec.describe "LLM::Anthropic" do
   subject(:anthropic) { LLM.anthropic("") }
 
   before(:each, :success) do

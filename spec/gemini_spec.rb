@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
-require "llm/providers/gemini"
 
-RSpec.describe LLM::Gemini do
+RSpec.describe "LLM::Gemini" do
   subject(:gemini) { LLM.gemini("") }
 
   before(:each, :success) do
