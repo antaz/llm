@@ -9,14 +9,16 @@ module LLM
 
   class Gemini < Provider
     HOST = "generativelanguage.googleapis.com"
-    PATH = "/v1beta/models/gemini-1.5-flash"
+    PATH = "/v1beta/models"
 
     def initialize(secret)
       super(secret, HOST)
     end
 
     def complete(prompt, params = {})
-      req = Net::HTTP::Post.new [PATH, "generateContent"].join(":")
+      params = {model: "gemini-1.5-flash"}.merge(params)
+      path = [PATH, params[:model]].join("/")
+      req = Net::HTTP::Post.new [path, "generateContent"].join(":")
 
       body = {
         contents: [{parts: [{text: prompt}]}]
