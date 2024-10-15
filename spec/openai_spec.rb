@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
+require "llm/providers/openai"
 
 RSpec.describe LLM::OpenAI do
-  subject(:openai) { LLM::OpenAI.new("") }
+  subject(:openai) { LLM.openai("") }
 
   before(:each, :success) do
     stub_request(:post, "https://api.openai.com/v1/chat/completions")

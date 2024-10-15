@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require "webmock/rspec"
+require "llm/providers/gemini"
 
 RSpec.describe LLM::Gemini do
-  subject(:gemini) { LLM::Gemini.new("") }
+  subject(:gemini) { LLM.gemini("") }
 
   before(:each, :success) do
     stub_request(:post, "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=")
