@@ -2,7 +2,7 @@
 
 module LLM
   ##
-  # The Provider class represents a base class for
+  # The Provider class represents an abstract class for
   # LLM (Language Model) providers
   class Provider
     ##
