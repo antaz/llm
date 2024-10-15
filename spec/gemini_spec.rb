@@ -2,8 +2,8 @@
 
 require "webmock/rspec"
 
-RSpec.describe LLM::Gemini do
-  subject(:gemini) { LLM::Gemini.new("") }
+RSpec.describe "LLM::Gemini" do
+  subject(:gemini) { LLM.gemini("") }
 
   before(:each, :success) do
     stub_request(:post, "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=")

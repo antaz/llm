@@ -2,8 +2,8 @@
 
 require "webmock/rspec"
 
-RSpec.describe LLM::OpenAI do
-  subject(:openai) { LLM::OpenAI.new("") }
+RSpec.describe "LLM::OpenAI" do
+  subject(:openai) { LLM.openai("") }
 
   before(:each, :success) do
     stub_request(:post, "https://api.openai.com/v1/chat/completions")

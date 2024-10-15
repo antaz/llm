@@ -2,8 +2,8 @@
 
 require "webmock/rspec"
 
-RSpec.describe LLM::Anthropic do
-  subject(:anthropic) { LLM::Anthropic.new("") }
+RSpec.describe "LLM::Anthropic" do
+  subject(:anthropic) { LLM.anthropic("") }
 
   before(:each, :success) do
     stub_request(:post, "https://api.anthropic.com/v1/messages")
