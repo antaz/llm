@@ -34,6 +34,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "webmock", "~> 3.24.0"
+  spec.add_development_dependency "yard", "~> 0.9.37"
+  spec.add_development_dependency "kramdown", "~> 2.4"
+  spec.add_development_dependency "webrick", "~> 1.8"
+
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
 

@@ -16,6 +16,8 @@ GEM
     diff-lcs (1.5.1)
     hashdiff (1.1.1)
     json (2.7.2)
+    kramdown (2.4.0)
+      rexml
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
     parallel (1.26.3)
@@ -75,6 +77,8 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    webrick (1.8.2)
+    yard (0.9.37)
 
 PLATFORMS
   ruby
@@ -82,10 +86,13 @@ PLATFORMS
 
 DEPENDENCIES
   LLM!
+  kramdown (~> 2.4)
   rake (~> 13.0)
   rspec (~> 3.0)
   standard (~> 1.40)
   webmock (~> 3.24.0)
+  webrick (~> 1.8)
+  yard (~> 0.9.37)
 
 BUNDLED WITH
    2.5.10

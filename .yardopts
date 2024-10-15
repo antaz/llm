@@ -1,0 +1,1 @@
+-m markdown -M kramdown --hide-void-return --no-private
