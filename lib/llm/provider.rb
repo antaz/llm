@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module LLM
+  require "llm/error"
   ##
   # The Provider class represents an abstract class for
   # LLM (Language Model) providers

@@ -3,7 +3,6 @@
 module LLM
   require "net/http"
   require "json"
-  require "llm/http/client"
   require "llm/provider"
   require "llm/message"
   require "llm/response"
