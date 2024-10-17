@@ -4,7 +4,6 @@ module LLM
   module HTTPClient
     require "llm/error"
     def request(http, req)
-      req.content_type = "application/json"
       res = http.request(req)
       res.tap(&:value)
     rescue Net::HTTPClientException

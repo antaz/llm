@@ -23,6 +23,7 @@ module LLM
         contents: [{parts: [{text: prompt}]}]
       }
 
+      req.content_type = "application/json"
       req.body = JSON.generate body
       auth req
       res = request @http, req
