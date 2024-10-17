@@ -16,7 +16,6 @@ module LLM
       @secret = secret
       @http = Net::HTTP.new(host, port).tap do |http|
         http.use_ssl = true
-        http.extend(HTTPClient)
       end
     end
 
@@ -31,6 +30,37 @@ module LLM
     end
 
     private
+
+    ##
+    # Sends an HTTP request and handles the response
+    # @param [Net::HTTP::Request] req
+    #  The HTTP request to be sent
+    # @return [Net::HTTPResponse]
+    #  The HTTP response
+    # @raise [LLM::Error::Unauthorized]
+    #  When authentication fails
+    # @raise [LLM::Error::RateLimit]
+    #  When too many requests are made
+    # @raise [LLM::Error::HTTPError]
+    #  For unexpected HTTP responses
+    def request(req)
+      req.content_type = "application/json"
+      auth(req)
+      res = @http.request(req)
+      res.tap(&:value)
+    rescue Net::HTTPClientException
+      if [
+        Net::HTTPBadRequest,   # Gemini (huh?)
+        Net::HTTPForbidden,    # Anthropic
+        Net::HTTPUnauthorized  # OpenAI
+      ].any? { _1 === res }
+        raise LLM::Error::Unauthorized.new { _1.response = res }, "Authentication error"
+      elsif Net::HTTPTooManyRequests === res
+        raise LLM::Error::RateLimit.new { _1.response = res }, "Too many requests"
+      else
+        raise LLM::Error::HTTPError.new { _1.response = res }, "Unexpected response"
+      end
+    end
 
     ##
     # Prepares a request for authentication

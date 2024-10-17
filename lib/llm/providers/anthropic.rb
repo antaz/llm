@@ -29,9 +29,8 @@ module LLM
 
       req = Net::HTTP::Post.new [PATH, "messages"].join("/")
       req.body = JSON.generate(body)
-      auth(req)
 
-      res = @http.post(req)
+      res = request(req)
 
       Response.new(JSON.parse(res.body)["content"].map { |content|
         Message.new("assistant", content.dig("text"))
