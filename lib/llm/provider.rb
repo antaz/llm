@@ -44,10 +44,9 @@ module LLM
     #  When too many requests are made
     # @raise [LLM::Error::HTTPError]
     #  For unexpected HTTP responses
-    def request(req)
+    def request(http, req)
       req.content_type = "application/json"
-      auth(req)
-      res = @http.request(req)
+      res = http.request(req)
       res.tap(&:value)
     rescue Net::HTTPClientException
       if [

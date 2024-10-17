@@ -29,8 +29,8 @@ module LLM
       }
 
       req.body = JSON.generate(body)
-
-      res = request(req)
+      auth req
+      res = request @http, req
 
       Response.new(JSON.parse(res.body)["choices"].map { |choice|
         Message.new(choice.dig("message", "role"), choice.dig("message", "content"))

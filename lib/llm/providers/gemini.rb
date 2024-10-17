@@ -23,8 +23,9 @@ module LLM
         contents: [{parts: [{text: prompt}]}]
       }
 
-      req.body = JSON.generate(body)
-      res = request(req)
+      req.body = JSON.generate body
+      auth req
+      res = request @http, req
 
       Response.new(
         JSON.parse(res.body)["candidates"].map { |candidate|
