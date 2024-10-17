@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 module LLM
-  require "llm/error"
+  require "llm/http"
   ##
   # The Provider class represents an abstract class for
   # LLM (Language Model) providers
   class Provider
+    include HTTPClient
     ##
     # @param [String] secret
     #  The secret key for authentication
@@ -31,36 +32,6 @@ module LLM
     end
 
     private
-
-    ##
-    # Sends an HTTP request and handles the response
-    # @param [Net::HTTP::Request] req
-    #  The HTTP request to be sent
-    # @return [Net::HTTPResponse]
-    #  The HTTP response
-    # @raise [LLM::Error::Unauthorized]
-    #  When authentication fails
-    # @raise [LLM::Error::RateLimit]
-    #  When too many requests are made
-    # @raise [LLM::Error::HTTPError]
-    #  For unexpected HTTP responses
-    def request(http, req)
-      req.content_type = "application/json"
-      res = http.request(req)
-      res.tap(&:value)
-    rescue Net::HTTPClientException
-      if [
-        Net::HTTPBadRequest,   # Gemini (huh?)
-        Net::HTTPForbidden,    # Anthropic
-        Net::HTTPUnauthorized  # OpenAI
-      ].any? { _1 === res }
-        raise LLM::Error::Unauthorized.new { _1.response = res }, "Authentication error"
-      elsif Net::HTTPTooManyRequests === res
-        raise LLM::Error::RateLimit.new { _1.response = res }, "Too many requests"
-      else
-        raise LLM::Error::HTTPError.new { _1.response = res }, "Unexpected response"
-      end
-    end
 
     ##
     # Prepares a request for authentication
