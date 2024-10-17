@@ -30,6 +30,10 @@ module LLM
       raise NotImplementedError
     end
 
+    def chat(messages)
+      raise NotImplementedError
+    end
+
     private
 
     ##
