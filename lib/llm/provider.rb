@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module LLM
-  require "llm/http"
+  require "llm/http_client"
   ##
   # The Provider class represents an abstract class for
   # LLM (Language Model) providers
