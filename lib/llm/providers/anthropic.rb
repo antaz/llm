@@ -3,7 +3,6 @@
 module LLM
   require "net/http"
   require "json"
-  require "llm/http/client"
   require "llm/provider"
   require "llm/message"
   require "llm/response"
@@ -21,17 +20,17 @@ module LLM
     end
 
     def complete(prompt, params = {})
+      req = Net::HTTP::Post.new [PATH, "messages"].join("/")
       body = {
         messages: [{role: "user", content: prompt}],
         **DEFAULT_PARAMS,
         **params
       }
 
-      req = Net::HTTP::Post.new [PATH, "messages"].join("/")
-      req.body = JSON.generate(body)
-      auth(req)
-
-      res = @http.post(req)
+      req.content_type = "application/json"
+      req.body = JSON.generate body
+      auth req
+      res = request @http, req
 
       Response.new(JSON.parse(res.body)["content"].map { |content|
         Message.new("assistant", content.dig("text"))

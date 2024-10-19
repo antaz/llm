@@ -3,7 +3,6 @@
 module LLM
   require "net/http"
   require "json"
-  require "llm/http/client"
   require "llm/provider"
   require "llm/message"
 
@@ -24,9 +23,10 @@ module LLM
         contents: [{parts: [{text: prompt}]}]
       }
 
-      req.body = JSON.generate(body)
-      auth(req)
-      res = @http.post(req)
+      req.content_type = "application/json"
+      req.body = JSON.generate body
+      auth req
+      res = request @http, req
 
       Response.new(
         JSON.parse(res.body)["candidates"].map { |candidate|

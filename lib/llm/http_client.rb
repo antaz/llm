@@ -1,12 +1,23 @@
 # frozen_string_literal: true
 
 module LLM
-  require "llm/error"
-
   module HTTPClient
-    def post(req)
-      req.content_type = "application/json"
-      res = request(req)
+    require "llm/error"
+    ##
+    # Makes an HTTP request and handles common error responses.
+    # @param http [Net::HTTP]
+    #   The HTTP object to use for the request.
+    # @param req [Net::HTTPRequest]
+    #   The request to send.
+    # @return [Net::HTTPResponse]
+    #   The response from the server.
+    #
+    # @raise [LLM::Error::Unauthorized] If authentication fails.
+    # @raise [LLM::Error::RateLimit] If the rate limit is exceeded.
+    # @raise [LLM::Error::HTTPError] For other unexpected responses.
+    #
+    def request(http, req)
+      res = http.request(req)
       res.tap(&:value)
     rescue Net::HTTPClientException
       if [

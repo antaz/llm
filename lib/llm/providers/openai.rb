@@ -3,7 +3,6 @@
 module LLM
   require "net/http"
   require "json"
-  require "llm/http/client"
   require "llm/provider"
   require "llm/message"
   require "llm/response"
@@ -29,10 +28,10 @@ module LLM
         **params
       }
 
+      req.content_type = "application/json"
       req.body = JSON.generate(body)
-      auth(req)
-
-      res = @http.post(req)
+      auth req
+      res = request @http, req
 
       Response.new(JSON.parse(res.body)["choices"].map { |choice|
         Message.new(choice.dig("message", "role"), choice.dig("message", "content"))
