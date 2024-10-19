@@ -2,10 +2,11 @@
 
 module LLM
   class Response
-    attr_reader :messages
+    attr_reader :raw
 
-    def initialize(messages)
-      @messages = messages
+    def initialize(raw, provider)
+      @raw = raw
+      @provider = provider
     end
   end
 end
