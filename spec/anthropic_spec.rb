@@ -50,7 +50,7 @@ RSpec.describe "LLM::Anthropic" do
 
   it "Returns a successful completion", :success do
     response = anthropic.complete("Hello, world")
-    expect(response).to be_a(LLM::Response)
+    expect(response).to be_a(LLM::Completion)
     expect(response.messages.first).to have_attributes(
       role: "assistant",
       content: "Hi! My name is Claude."

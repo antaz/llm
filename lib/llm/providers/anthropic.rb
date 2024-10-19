@@ -5,7 +5,7 @@ module LLM
   require "json"
   require "llm/provider"
   require "llm/message"
-  require "llm/response"
+  require "llm/completion"
 
   class Anthropic < Provider
     HOST = "api.anthropic.com"
@@ -32,9 +32,7 @@ module LLM
       auth req
       res = request @http, req
 
-      Response.new(JSON.parse(res.body)["content"].map { |content|
-        Message.new("assistant", content.dig("text"))
-      })
+      Completion.new(res.body, :anthropic)
     end
 
     private
