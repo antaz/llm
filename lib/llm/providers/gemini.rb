@@ -5,6 +5,7 @@ module LLM
   require "json"
   require "llm/provider"
   require "llm/message"
+  require "llm/completion"
 
   class Gemini < Provider
     HOST = "generativelanguage.googleapis.com"
@@ -28,11 +29,7 @@ module LLM
       auth req
       res = request @http, req
 
-      Response.new(
-        JSON.parse(res.body)["candidates"].map { |candidate|
-          Message.new(candidate.dig("content", "role"), candidate.dig("content", "parts", 0, "text"))
-        }
-      )
+      Completion.new(res.body, :gemini)
     end
 
     private

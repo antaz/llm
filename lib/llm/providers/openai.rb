@@ -5,7 +5,7 @@ module LLM
   require "json"
   require "llm/provider"
   require "llm/message"
-  require "llm/response"
+  require "llm/completion"
 
   class OpenAI < Provider
     HOST = "api.openai.com"
@@ -33,9 +33,7 @@ module LLM
       auth req
       res = request @http, req
 
-      Response.new(JSON.parse(res.body)["choices"].map { |choice|
-        Message.new(choice.dig("message", "role"), choice.dig("message", "content"))
-      })
+      Completion.new(res.body, :openai)
     end
 
     private

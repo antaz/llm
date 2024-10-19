@@ -62,7 +62,7 @@ RSpec.describe "LLM::OpenAI" do
   end
 
   it "returns a successful completion", :success do
-    expect(openai.complete("Hello!")).to be_a(LLM::Response).and have_attributes(
+    expect(openai.complete("Hello!")).to be_a(LLM::Completion).and have_attributes(
       messages: [
         have_attributes(
           role: "assistant",
