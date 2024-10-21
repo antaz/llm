@@ -5,7 +5,14 @@ module LLM
     require "json"
     require_relative "response/completion"
 
+    ##
+    # @return [Hash]
+    #  Returns the response body
     attr_reader :raw
+
+    ##
+    # @return [LLM::Provider]
+    #  Returns the provider
     attr_reader :provider
 
     ##

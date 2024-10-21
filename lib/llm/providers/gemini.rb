@@ -26,6 +26,8 @@ module LLM
       Response::Completion.new(res.body, self)
     end
 
+    private
+
     ##
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
@@ -37,8 +39,6 @@ module LLM
         )
       end
     end
-
-    private
 
     def auth(req)
       req.path.replace [req.path, URI.encode_www_form(key: @secret)].join("?")

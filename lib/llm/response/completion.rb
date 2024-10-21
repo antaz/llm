@@ -6,7 +6,7 @@ module LLM
     # @return [Array<LLM::Message>]
     #  Returns an array of messages
     def messages
-      @provider.completion_messages(raw)
+      @provider.__send__ :completion_messages, raw
     end
   end
 end

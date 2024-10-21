@@ -31,6 +31,8 @@ module LLM
       raise NotImplementedError
     end
 
+    private
+
     ##
     # @param [Hash] raw
     #  A provider-specific Hash object
@@ -39,8 +41,6 @@ module LLM
     def completion_messages(raw)
       raise NotImplementedError
     end
-
-    private
 
     ##
     # Prepares a request for authentication

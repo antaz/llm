@@ -30,6 +30,8 @@ module LLM
       Response::Completion.new(res.body, self)
     end
 
+    private
+
     ##
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
@@ -38,8 +40,6 @@ module LLM
         LLM::Message.new(*_1["message"].values_at("role", "content"))
       end
     end
-
-    private
 
     def auth(req)
       req["Authorization"] = "Bearer #{@secret}"
