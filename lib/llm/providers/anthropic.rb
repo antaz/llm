@@ -39,7 +39,7 @@ module LLM
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
     def completion_messages(raw)
-      raw["content"].map { Message.new("assistant", _1) }
+      raw["content"].map { LLM::Message.new("assistant", _1) }
     end
 
     private
