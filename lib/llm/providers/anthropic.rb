@@ -32,7 +32,14 @@ module LLM
       auth req
       res = request @http, req
 
-      Completion.new(res.body, :anthropic)
+      Response::Completion.new(res.body, self)
+    end
+
+    ##
+    # @param (see LLM::Provider#completion_messages)
+    # @return (see LLM::Provider#completion_messages)
+    def completion_messages(raw)
+      raw["content"].map { Message.new("assistant", _1) }
     end
 
     private

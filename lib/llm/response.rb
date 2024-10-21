@@ -2,8 +2,15 @@
 
 module LLM
   class Response
+    require_relative "response/completion"
     attr_reader :raw
+    attr_reader :provider
 
+    ##
+    # @param [String] raw
+    #  Response body
+    # @param [LLM::Provider] provider
+    #  A provider
     def initialize(raw, provider)
       @raw = raw
       @provider = provider

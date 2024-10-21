@@ -29,7 +29,14 @@ module LLM
       auth req
       res = request @http, req
 
-      Completion.new(res.body, :gemini)
+      Response::Completion.new(res.body, self)
+    end
+
+    ##
+    # @param (see LLM::Provider#completion_messages)
+    # @return (see LLM::Provider#completion_messages)
+    def completion_messages(raw)
+      Message.new(raw["candidate"].dig("content", "role"), candidate.dig("content", "parts", 0, "text"))
     end
 
     private
