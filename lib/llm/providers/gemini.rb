@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 module LLM
-  require "net/http"
-  require "json"
-  require "llm/provider"
-  require "llm/message"
-
   class Gemini < Provider
     HOST = "generativelanguage.googleapis.com"
     PATH = "/v1beta/models"
@@ -28,11 +23,19 @@ module LLM
       auth req
       res = request @http, req
 
-      Response.new(
-        JSON.parse(res.body)["candidates"].map { |candidate|
-          Message.new(candidate.dig("content", "role"), candidate.dig("content", "parts", 0, "text"))
-        }
-      )
+      Response::Completion.new(res.body, self)
+    end
+
+    ##
+    # @param (see LLM::Provider#completion_messages)
+    # @return (see LLM::Provider#completion_messages)
+    def completion_messages(raw)
+      raw["candidates"].map do
+        LLM::Message.new(
+          _1.dig("content", "role"),
+          _1.dig("content", "parts", 0, "text")
+        )
+      end
     end
 
     private

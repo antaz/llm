@@ -31,6 +31,15 @@ module LLM
       raise NotImplementedError
     end
 
+    ##
+    # @param [Hash] raw
+    #  A provider-specific Hash object
+    # @return [Array<LLM::Message>]
+    #  Returns an array of Message objects
+    def completion_messages(raw)
+      raise NotImplementedError
+    end
+
     private
 
     ##

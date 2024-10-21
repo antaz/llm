@@ -79,10 +79,10 @@ RSpec.describe "LLM::Gemini" do
       )
   end
 
-  it "Returns a successful completion", :success do
-    response = gemini.complete("Hello, world")
-    expect(response).to be_a(LLM::Response)
-    expect(response.messages.first).to have_attributes(
+  it "returns a successful completion", :success do
+    completion = gemini.complete("Hello, world")
+    expect(completion).to be_a(LLM::Response::Completion)
+    expect(completion.messages.first).to have_attributes(
       role: "model",
       content: "Hello! How can I help you today? \n"
     )

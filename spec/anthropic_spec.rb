@@ -48,10 +48,10 @@ RSpec.describe "LLM::Anthropic" do
       )
   end
 
-  it "Returns a successful completion", :success do
+  it "returns a successful completion", :success do
     response = anthropic.complete("Hello, world")
-    expect(response).to be_a(LLM::Response)
-    expect(response.messages.first).to have_attributes(
+    expect(response).to be_a(LLM::Response::Completion)
+    expect(response.messages[0]).to have_attributes(
       role: "assistant",
       content: "Hi! My name is Claude."
     )
