@@ -33,7 +33,16 @@ module LLM
       auth req
       res = request @http, req
 
-      Completion.new(res.body, :openai)
+      Response::Completion.new(res.body, self)
+    end
+
+    ##
+    # @param (see LLM::Provider#completion_messages)
+    # @return (see LLM::Provider#completion_messages)
+    def completion_messages(raw)
+      raw["choices"].map do
+        LLM::Message.new(*choice["message"].values_at("role", "content"))
+      end
     end
 
     private
