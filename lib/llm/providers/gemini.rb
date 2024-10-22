@@ -20,7 +20,7 @@ module LLM
 
     def complete(prompt, params = {})
       params = DEFAULT_PARAMS.merge(params)
-      path = [PATH, params[:model]].join("/")
+      path = [PATH, params.delete(:model)].join("/")
       req = Net::HTTP::Post.new [path, "generateContent"].join(":")
 
       body = {
