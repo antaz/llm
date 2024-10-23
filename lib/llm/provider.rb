@@ -10,7 +10,7 @@ module LLM
     ##
     # @param [String] secret
     #  The secret key for authentication
-    # @param [String]
+    # @param [String] host
     #  The host address of the LLM provider
     # @param [Integer] port
     #  The port number
