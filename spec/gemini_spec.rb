@@ -79,16 +79,16 @@ RSpec.describe "LLM::Gemini" do
       )
   end
 
-  it "Returns a successful completion", :success do
-    response = gemini.complete("Hello, world")
-    expect(response).to be_a(LLM::Response)
-    expect(response.messages.first).to have_attributes(
+  it "returns a successful completion", :success do
+    completion = gemini.complete("Hello, world")
+    expect(completion).to be_a(LLM::Response::Completion)
+    expect(completion.messages.first).to have_attributes(
       role: "model",
       content: "Hello! How can I help you today? \n"
     )
   end
 
-  it "Returns an authentication error", :auth_error do
+  it "returns an authentication error", :auth_error do
     expect { gemini.complete("Hello!") }.to raise_error(LLM::Error::Unauthorized)
   end
 end

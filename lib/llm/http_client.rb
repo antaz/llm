@@ -2,20 +2,23 @@
 
 module LLM
   module HTTPClient
-    require "llm/error"
+    require "net/http"
     ##
-    # Makes an HTTP request and handles common error responses.
-    # @param http [Net::HTTP]
-    #   The HTTP object to use for the request.
-    # @param req [Net::HTTPRequest]
-    #   The request to send.
+    # Initiates a HTTP request
+    # @param [Net::HTTP] http
+    #  The HTTP object to use for the request
+    # @param [Net::HTTPRequest] req
+    #  The request to send
     # @return [Net::HTTPResponse]
-    #   The response from the server.
-    #
-    # @raise [LLM::Error::Unauthorized] If authentication fails.
-    # @raise [LLM::Error::RateLimit] If the rate limit is exceeded.
-    # @raise [LLM::Error::HTTPError] For other unexpected responses.
-    #
+    #  The response from the server
+    # @raise [LLM::Error::Unauthorized]
+    #  When authentication fails
+    # @raise [LLM::Error::RateLimit]
+    #  When the rate limit is exceeded
+    # @raise [LLM::Error::HTTPError]
+    #  When any other unsuccessful status code is returned
+    # @raise [SystemCallError]
+    #  When there is a network error at the operating system level
     def request(http, req)
       res = http.request(req)
       res.tap(&:value)

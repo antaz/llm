@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 module LLM
-  require "net/http"
-  require "json"
-  require "llm/provider"
-  require "llm/message"
-  require "llm/response"
-
   class Anthropic < Provider
     HOST = "api.anthropic.com"
     PATH = "/v1"
@@ -32,12 +26,17 @@ module LLM
       auth req
       res = request @http, req
 
-      Response.new(JSON.parse(res.body)["content"].map { |content|
-        Message.new("assistant", content.dig("text"))
-      })
+      Response::Completion.new(res.body, self)
     end
 
     private
+
+    ##
+    # @param (see LLM::Provider#completion_messages)
+    # @return (see LLM::Provider#completion_messages)
+    def completion_messages(raw)
+      raw["content"].map { LLM::Message.new("assistant", _1["text"]) }
+    end
 
     def auth(req)
       req["x-api-key"] = @secret

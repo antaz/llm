@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 module LLM
-  require "net/http"
-  require "json"
-  require "llm/provider"
-  require "llm/message"
-  require "llm/response"
-
   class OpenAI < Provider
     HOST = "api.openai.com"
     PATH = "/v1"
@@ -33,12 +27,19 @@ module LLM
       auth req
       res = request @http, req
 
-      Response.new(JSON.parse(res.body)["choices"].map { |choice|
-        Message.new(choice.dig("message", "role"), choice.dig("message", "content"))
-      })
+      Response::Completion.new(res.body, self)
     end
 
     private
+
+    ##
+    # @param (see LLM::Provider#completion_messages)
+    # @return (see LLM::Provider#completion_messages)
+    def completion_messages(raw)
+      raw["choices"].map do
+        LLM::Message.new(*_1["message"].values_at("role", "content"))
+      end
+    end
 
     def auth(req)
       req["Authorization"] = "Bearer #{@secret}"

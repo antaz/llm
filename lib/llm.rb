@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
-require_relative "llm/version"
-
 module LLM
+  require_relative "llm/version"
+  require_relative "llm/error"
+  require_relative "llm/message"
+  require_relative "llm/response"
+  require_relative "llm/provider"
+
   module_function
 
   def anthropic(secret)
-    require_relative "llm/providers/anthropic" unless defined?(Anthropic)
+    require_relative "llm/providers/anthropic" unless defined?(LLM::Anthropic)
     LLM::Anthropic.new(secret)
   end
 
