@@ -2,10 +2,26 @@
 
 module LLM
   class Response
+    require "json"
+    require_relative "response/completion"
+
+    ##
+    # @return [Hash]
+    #  Returns the response body
     attr_reader :raw
 
+    ##
+    # @return [LLM::Provider]
+    #  Returns the provider
+    attr_reader :provider
+
+    ##
+    # @param [String] raw
+    #  Response body
+    # @param [LLM::Provider] provider
+    #  A provider
     def initialize(raw, provider)
-      @raw = raw
+      @raw = JSON.parse(raw)
       @provider = provider
     end
   end
