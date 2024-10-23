@@ -7,9 +7,10 @@ This library offers a unified API to interact with multiple LLM providers, simpl
 ## Usage
 
 ```ruby
-LLM::OpenAI(SECRET_TOKEN).complete("Hello")
+completion = LLM.openai(SECRET_TOKEN).complete "Hello"
+completion.messages
 
-=> #<LLM::Response:0x000076ac9f7f97f8 @messages=[#<LLM::Message:0x000076ac9f7f9870 @content="Hello! How can I assist you today?", @role="assistant">]>
+=> [#<LLM::Message:0x00007bd14788c8d8 @content="Hello! How can I assist you today?", @role="assistant">]
 ```
 
 ## Available providers
