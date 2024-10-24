@@ -61,15 +61,23 @@ RSpec.describe "LLM::OpenAI" do
       )
   end
 
-  it "returns a successful completion", :success do
-    expect(openai.complete("Hello!")).to be_a(LLM::Response::Completion).and have_attributes(
-      messages: [
-        have_attributes(
-          role: "assistant",
-          content: "Hello! How can I assist you today?"
-        )
-      ]
-    )
+  context "with successful completion", :success do
+    let(:completion) { openai.complete("Hello!") }
+
+    it "has model" do
+      expect(completion).to have_attributes(model: "gpt-4o-mini-2024-07-18")
+    end
+
+    it "has messages" do
+      expect(completion).to be_a(LLM::Response::Completion).and have_attributes(
+        messages: [
+          have_attributes(
+            role: "assistant",
+            content: "Hello! How can I assist you today?"
+          )
+        ]
+      )
+    end
   end
 
   context "with an unauthorized error", :unauthorized do

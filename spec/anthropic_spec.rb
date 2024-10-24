@@ -48,13 +48,19 @@ RSpec.describe "LLM::Anthropic" do
       )
   end
 
-  it "returns a successful completion", :success do
-    response = anthropic.complete("Hello, world")
-    expect(response).to be_a(LLM::Response::Completion)
-    expect(response.messages[0]).to have_attributes(
-      role: "assistant",
-      content: "Hi! My name is Claude."
-    )
+  context "with successful completion", :success do
+    let(:completion) { anthropic.complete("Hello, world") }
+
+    it "has model" do
+      expect(completion).to have_attributes(model: "claude-3-5-sonnet-20240620")
+    end
+
+    it "has messages" do
+      expect(completion.messages[0]).to have_attributes(
+        role: "assistant",
+        content: "Hi! My name is Claude."
+      )
+    end
   end
 
   it "returns an authentication error", :auth_error do

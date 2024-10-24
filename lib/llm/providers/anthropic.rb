@@ -32,6 +32,13 @@ module LLM
     private
 
     ##
+    # @param (see LLM::Provider#completion_model)
+    # @return (see LLM::Provider#completion_model)
+    def completion_model(raw)
+      raw["model"]
+    end
+
+    ##
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
     def completion_messages(raw)

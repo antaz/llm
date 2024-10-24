@@ -47,7 +47,8 @@ RSpec.describe "LLM::Gemini" do
             "promptTokenCount": 2,
             "candidatesTokenCount": 10,
             "totalTokenCount": 12
-          }
+          },
+          "modelVersion": "gemini-1.5-flash-001"
         }',
         headers: {"Content-Type" => "application/json"}
       )
@@ -79,13 +80,19 @@ RSpec.describe "LLM::Gemini" do
       )
   end
 
-  it "returns a successful completion", :success do
-    completion = gemini.complete("Hello, world")
-    expect(completion).to be_a(LLM::Response::Completion)
-    expect(completion.messages.first).to have_attributes(
-      role: "model",
-      content: "Hello! How can I help you today? \n"
-    )
+  context "with successful completion", :success do
+    let(:completion) { gemini.complete("Hello!") }
+
+    it "has model" do
+      expect(completion).to have_attributes(model: "gemini-1.5-flash-001")
+    end
+
+    it "has messages" do
+      expect(completion.messages.first).to have_attributes(
+        role: "model",
+        content: "Hello! How can I help you today? \n"
+      )
+    end
   end
 
   it "returns an authentication error", :auth_error do
