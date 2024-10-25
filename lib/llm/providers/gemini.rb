@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module LLM
+  ##
+  # The Gemini class implements a provider for
+  # [Gemini](https://ai.google.dev/)
   class Gemini < Provider
     HOST = "generativelanguage.googleapis.com"
     PATH = "/v1beta/models"
@@ -9,6 +12,8 @@ module LLM
       model: "gemini-1.5-flash"
     }.freeze
 
+    ##
+    # @param secret (see LLM::Provider#initialize)
     def initialize(secret)
       super(secret, HOST)
     end
