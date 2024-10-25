@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module LLM
+  ##
+  # The OpenAI class implements a provider for
+  # [OpenAI](https://platform.openai.com/)
   class OpenAI < Provider
     HOST = "api.openai.com"
     PATH = "/v1"
@@ -9,6 +12,8 @@ module LLM
       model: "gpt-4o-mini"
     }.freeze
 
+    ##
+    # @param secret (see LLM::Provider#initialize)
     def initialize(secret)
       super(secret, HOST)
     end
