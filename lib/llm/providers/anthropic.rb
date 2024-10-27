@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module LLM
+  ##
+  # The Anthropic class implements a provider for
+  # [Anthropic](https://www.anthropic.com)
   class Anthropic < Provider
     HOST = "api.anthropic.com"
     PATH = "/v1"
@@ -9,6 +12,8 @@ module LLM
       model: "claude-3-5-sonnet-20240620"
     }.freeze
 
+    ##
+    # @param secret (see LLM::Provider#initialize)
     def initialize(secret)
       super(secret, HOST)
     end
