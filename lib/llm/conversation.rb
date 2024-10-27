@@ -8,7 +8,7 @@ module LLM
     end
 
     def chat(prompt)
-      @provider.complete(@messages + [Message.new("user", prompt)])
+      @provider.complete(messages: @messages + [Message.new("user", prompt)])
         .then { Conversation.new(@provider, @messages + [Message.new("user", prompt), *_1.messages]) }
     end
   end
