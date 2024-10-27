@@ -34,7 +34,7 @@ module LLM
       Response::Completion.new(res.body, self).tap { _1.thread = thread }
     end
 
-    def chat(prompt, params = {})
+    def chat(prompt, **params)
       completion = complete(prompt, **params)
       Conversation.new(completion, self)
     end
