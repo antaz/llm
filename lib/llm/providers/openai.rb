@@ -18,11 +18,11 @@ module LLM
       super(secret, HOST)
     end
 
-    def complete(prompt, params = {})
+    def complete(messages, params = {})
       req = Net::HTTP::Post.new [PATH, "chat", "completions"].join("/")
 
       body = {
-        messages: [{role: "user", content: prompt}],
+        messages: messages.map { |m| {role: m.role, content: m.content} },
         **DEFAULT_PARAMS,
         **params
       }
@@ -33,6 +33,11 @@ module LLM
       res = request @http, req
 
       Response::Completion.new(res.body, self)
+    end
+
+    def chat(prompt)
+      completion = complete([Message.new("user", prompt)])
+      Conversation.new(self, [Message.new("user", prompt), *completion.messages])
     end
 
     private
