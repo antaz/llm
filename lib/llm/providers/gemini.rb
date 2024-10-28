@@ -40,14 +40,14 @@ module LLM
     ##
     # @param (see LLM::Provider#completion_model)
     # @return (see LLM::Provider#completion_model)
-    def completion_model(raw)
+    def completion_model(_completion, raw)
       raw["modelVersion"]
     end
 
     ##
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
-    def completion_messages(raw)
+    def completion_messages(_completion, raw)
       raw["candidates"].map do
         LLM::Message.new(
           _1.dig("content", "role"),
