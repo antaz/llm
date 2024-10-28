@@ -26,5 +26,6 @@ module LLM
     def messages
       @completion.messages
     end
+    alias_method :thread, :messages
   end
 end
