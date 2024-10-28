@@ -21,7 +21,7 @@ module LLM
     # @param [LLM::Provider] provider
     #  A provider
     def initialize(raw, provider)
-      @raw = String === raw ? JSON.parse(raw) : raw
+      @raw = JSON.parse(raw)
       @provider = provider
     end
   end
