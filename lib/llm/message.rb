@@ -8,5 +8,9 @@ module LLM
       @role = role
       @content = content
     end
+
+    def to_h
+      {role:, content:}
+    end
   end
 end
