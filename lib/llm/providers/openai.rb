@@ -18,10 +18,11 @@ module LLM
       super(secret, HOST)
     end
 
-    def complete(prompt, thread: [], **params)
+    def complete(prompt, params = {})
       req = Net::HTTP::Post.new [PATH, "chat", "completions"].join("/")
+
       body = {
-        messages: thread.map(&:to_h).push({role: "user", content: prompt}),
+        messages: [{role: "user", content: prompt}],
         **DEFAULT_PARAMS,
         **params
       }
@@ -31,12 +32,7 @@ module LLM
       auth req
       res = request @http, req
 
-      Response::Completion.new(res.body, self).tap { _1.thread = thread }
-    end
-
-    def chat(prompt, **params)
-      completion = complete(prompt, **params)
-      Conversation.new(completion, self)
+      Response::Completion.new(res.body, self)
     end
 
     private
@@ -44,17 +40,17 @@ module LLM
     ##
     # @param (see LLM::Provider#completion_model)
     # @return (see LLM::Provider#completion_model)
-    def completion_model(_completion, raw)
+    def completion_model(raw)
       raw["model"]
     end
 
     ##
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
-    def completion_messages(completion, raw)
+    def completion_messages(raw)
       raw["choices"].map do
         LLM::Message.new(*_1["message"].values_at("role", "content"))
-      end.prepend(*completion.thread)
+      end
     end
 
     def auth(req)
