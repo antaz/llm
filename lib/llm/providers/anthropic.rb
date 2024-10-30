@@ -39,14 +39,14 @@ module LLM
     ##
     # @param (see LLM::Provider#completion_model)
     # @return (see LLM::Provider#completion_model)
-    def completion_model(raw)
+    def completion_model(_completion, raw)
       raw["model"]
     end
 
     ##
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
-    def completion_messages(raw)
+    def completion_messages(_completion, raw)
       raw["content"].map { LLM::Message.new("assistant", _1["text"]) }
     end
 
