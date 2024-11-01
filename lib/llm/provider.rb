@@ -27,11 +27,11 @@ module LLM
     #  The input prompt to be completed
     # @raise [NotImplementedError]
     #  When the method is not implemented by a subclass
-    def complete(prompt)
+    def complete(prompt, **params)
       raise NotImplementedError
     end
 
-    def chat(messages)
+    def chat(prompt, **params)
       raise NotImplementedError
     end
 
