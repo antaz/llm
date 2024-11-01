@@ -2,14 +2,23 @@
 
 module LLM
   class Conversation
-    def initialize(provider, messages)
+    attr_accessor :thread
+
+    ##
+    # @param [Array<LLM::Message>] thread
+    #  An array of messages that form the conversation history
+    # @param [LLM::Provider] provider
+    #  A provider
+    def initialize(thread, provider)
+      @thread = thread
       @provider = provider
-      @messages = messages
     end
 
-    def chat(prompt)
-      @provider.complete(messages: @messages + [Message.new("user", prompt)])
-        .then { Conversation.new(@provider, @messages + [Message.new("user", prompt), *_1.messages]) }
+    ##
+    # @param prompt (see LLM::Provider#prompt)
+    # @return [LLM::Conversation]
+    def chat(prompt, **params)
+      @provider.chat(prompt, **params.merge(messages: @thread))
     end
   end
 end

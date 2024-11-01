@@ -18,26 +18,28 @@ module LLM
       super(secret, HOST)
     end
 
-    def complete(**params)
+    def complete(prompt, **params)
       req = Net::HTTP::Post.new [PATH, "chat", "completions"].join("/")
 
       body = {
+        messages: ((params[:messages] || []) + [Message.new("user", prompt)]).map(&:to_h),
         **DEFAULT_PARAMS,
-        messages: params[:messages]&.map { |m| {role: m.role, content: m.content} },
         **params.except(:messages)
       }
 
       req.content_type = "application/json"
       req.body = JSON.generate(body)
       auth req
+
       res = request @http, req
 
       Response::Completion.new(res.body, self)
     end
 
-    def chat(prompt)
-      completion = complete(messages: [Message.new("user", prompt)])
-      Conversation.new(self, [Message.new("user", prompt), *completion.messages])
+    def chat(prompt, **params)
+      completion = complete(prompt, **params)
+      thread = [*params[:messages], Message.new("user", prompt), completion.choices.first]
+      Conversation.new(thread, self)
     end
 
     private
