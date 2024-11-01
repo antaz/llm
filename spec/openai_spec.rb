@@ -68,9 +68,9 @@ RSpec.describe "LLM::OpenAI" do
       expect(completion).to have_attributes(model: "gpt-4o-mini-2024-07-18")
     end
 
-    it "has messages" do
+    it "has choices" do
       expect(completion).to be_a(LLM::Response::Completion).and have_attributes(
-        messages: [
+        choices: [
           have_attributes(
             role: "assistant",
             content: "Hello! How can I assist you today?"
