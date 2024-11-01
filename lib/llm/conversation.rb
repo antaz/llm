@@ -9,9 +9,9 @@ module LLM
     #  An array of messages that form the conversation history
     # @param [LLM::Provider] provider
     #  A provider
-    def initialize(thread, provider)
-      @thread = thread
+    def initialize(provider, thread)
       @provider = provider
+      @thread = thread
     end
 
     ##

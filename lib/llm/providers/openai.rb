@@ -39,7 +39,7 @@ module LLM
     def chat(prompt, **params)
       completion = complete(prompt, **params)
       thread = [*params[:messages], Message.new("user", prompt), completion.choices.first]
-      Conversation.new(thread, self)
+      Conversation.new(self, thread)
     end
 
     private
