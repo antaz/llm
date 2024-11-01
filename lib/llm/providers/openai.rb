@@ -50,9 +50,9 @@ module LLM
     end
 
     ##
-    # @param (see LLM::Provider#completion_messages)
-    # @return (see LLM::Provider#completion_messages)
-    def completion_messages(raw)
+    # @param (see LLM::Provider#completion_choices)
+    # @return (see LLM::Provider#completion_choices)
+    def completion_choices(raw)
       raw["choices"].map do
         LLM::Message.new(*_1["message"].values_at("role", "content"))
       end
