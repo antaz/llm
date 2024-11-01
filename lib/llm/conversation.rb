@@ -2,7 +2,7 @@
 
 module LLM
   class Conversation
-    attr_accessor :thread
+    attr_reader :thread
 
     ##
     # @param [Array<LLM::Message>] thread
