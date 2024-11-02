@@ -17,8 +17,8 @@ module LLM
     ##
     # @param prompt (see LLM::Provider#prompt)
     # @return [LLM::Conversation]
-    def chat(prompt, **params)
-      @provider.chat(prompt, **params.merge(messages: @thread))
+    def chat(prompt, role = :user, **params)
+      @provider.chat(prompt, role, **params.merge(messages: @thread))
     end
   end
 end
