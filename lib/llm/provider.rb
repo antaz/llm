@@ -27,11 +27,11 @@ module LLM
     #  The input prompt to be completed
     # @raise [NotImplementedError]
     #  When the method is not implemented by a subclass
-    def complete(prompt, **params)
+    def complete(prompt, role = :user, **params)
       raise NotImplementedError
     end
 
-    def chat(prompt, **params)
+    def chat(prompt, role = :user, **params)
       raise NotImplementedError
     end
 
