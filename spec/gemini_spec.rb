@@ -87,10 +87,14 @@ RSpec.describe "LLM::Gemini" do
       expect(completion).to have_attributes(model: "gemini-1.5-flash-001")
     end
 
-    it "has messages" do
-      expect(completion.messages.first).to have_attributes(
-        role: "model",
-        content: "Hello! How can I help you today? \n"
+    it "has choices" do
+      expect(completion).to be_a(LLM::Response::Completion).and have_attributes(
+        choices: [
+          have_attributes(
+            role: "model",
+            content: "Hello! How can I help you today? \n"
+          )
+        ]
       )
     end
   end

@@ -18,13 +18,16 @@ module LLM
       super(secret, HOST)
     end
 
-    def complete(prompt, params = {})
+    def complete(prompt, **params)
       params = DEFAULT_PARAMS.merge(params)
       path = [PATH, params.delete(:model)].join("/")
       req = Net::HTTP::Post.new [path, "generateContent"].join(":")
 
       body = {
-        contents: [{parts: [{text: prompt}]}]
+        contents: [{
+          parts: ((params[:messages] || []) + [Message.new("user", prompt)])
+            .map { |m| {text: m.content} }
+        }]
       }
 
       req.content_type = "application/json"
@@ -33,6 +36,12 @@ module LLM
       res = request @http, req
 
       Response::Completion.new(res.body, self)
+    end
+
+    def chat(prompt, **params)
+      completion = complete(prompt, **params)
+      thread = [*params[:messages], Message.new("user", prompt), completion.choices.first]
+      Conversation.new(self, thread)
     end
 
     private
@@ -47,7 +56,7 @@ module LLM
     ##
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
-    def completion_messages(raw)
+    def completion_choices(raw)
       raw["candidates"].map do
         LLM::Message.new(
           _1.dig("content", "role"),

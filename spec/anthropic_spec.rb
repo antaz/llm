@@ -55,10 +55,14 @@ RSpec.describe "LLM::Anthropic" do
       expect(completion).to have_attributes(model: "claude-3-5-sonnet-20240620")
     end
 
-    it "has messages" do
-      expect(completion.messages[0]).to have_attributes(
-        role: "assistant",
-        content: "Hi! My name is Claude."
+    it "has choices" do
+      expect(completion).to be_a(LLM::Response::Completion).and have_attributes(
+        choices: [
+          have_attributes(
+            role: "assistant",
+            content: "Hi! My name is Claude."
+          )
+        ]
       )
     end
   end

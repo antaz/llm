@@ -18,10 +18,10 @@ module LLM
       super(secret, HOST)
     end
 
-    def complete(prompt, params = {})
+    def complete(prompt, **params)
       req = Net::HTTP::Post.new [PATH, "messages"].join("/")
       body = {
-        messages: [{role: "user", content: prompt}],
+        messages: ((params[:messages] || []) + [Message.new("user", prompt)]).map(&:to_h),
         **DEFAULT_PARAMS,
         **params
       }
@@ -32,6 +32,12 @@ module LLM
       res = request @http, req
 
       Response::Completion.new(res.body, self)
+    end
+
+    def chat(prompt, **params)
+      completion = complete(prompt, **params)
+      thread = [*params[:messages], Message.new("user", prompt), completion.choices.first]
+      Conversation.new(self, thread)
     end
 
     private
@@ -46,7 +52,7 @@ module LLM
     ##
     # @param (see LLM::Provider#completion_messages)
     # @return (see LLM::Provider#completion_messages)
-    def completion_messages(raw)
+    def completion_choices(raw)
       raw["content"].map { LLM::Message.new("assistant", _1["text"]) }
     end
 

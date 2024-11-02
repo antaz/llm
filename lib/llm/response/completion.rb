@@ -12,8 +12,8 @@ module LLM
     ##
     # @return [Array<LLM::Message>]
     #  Returns an array of messages
-    def messages
-      @provider.__send__ :completion_messages, raw
+    def choices
+      @provider.__send__ :completion_choices, raw
     end
   end
 end
