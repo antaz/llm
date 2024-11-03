@@ -1,17 +1,17 @@
 # LLM
 
-This library offers a unified API to interact with multiple LLM providers, simplifying integration and usage across different platforms.
+A lightweight Ruby library for interacting with multiple LLM providers
 
 ## Install
 
 ## Usage
 
-```ruby
-completion = LLM.openai(SECRET_TOKEN).complete "Hello"
-completion.messages
-
-=> [#<LLM::Message:0x00007bd14788c8d8 @content="Hello! How can I assist you today?", @role="assistant">]
-```
+LLM
+  .openai(OPENAI_KEY)
+  .chat("Be a helpful assistant", :system)
+  .chat("How many moons Jupiter has?")
+  .thread
+  .last # => "As of my last update in October 2023, Jupiter has 80 known moons. The four largest moons, known as the Galilean moons ..."
 
 ## Available providers
 
