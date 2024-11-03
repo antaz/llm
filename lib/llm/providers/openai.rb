@@ -60,6 +60,18 @@ module LLM
       end
     end
 
+    def completion_prompt_tokens(raw)
+      raw.dig("usage", "prompt_tokens")
+    end
+
+    def completion_completion_tokens(raw)
+      raw.dig("usage", "completion_tokens")
+    end
+
+    def completion_total_tokens(raw)
+      raw.dig("usage", "total_tokens")
+    end
+
     def auth(req)
       req["Authorization"] = "Bearer #{@secret}"
     end

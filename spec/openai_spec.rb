@@ -65,7 +65,7 @@ RSpec.describe "LLM::OpenAI" do
     let(:completion) { openai.complete("Hello!") }
 
     it "has model" do
-      expect(completion).to have_attributes(model: "gpt-4o-mini-2024-07-18")
+      expect(completion.model).to eq("gpt-4o-mini-2024-07-18")
     end
 
     it "has choices" do
@@ -77,6 +77,18 @@ RSpec.describe "LLM::OpenAI" do
           )
         ]
       )
+    end
+
+    it "has prompt_tokens" do
+      expect(completion.prompt_tokens).to eq(9)
+    end
+
+    it "has completion_tokens" do
+      expect(completion.completion_tokens).to eq(9)
+    end
+
+    it "has total_tokens" do
+      expect(completion.total_tokens).to eq(18)
     end
   end
 
