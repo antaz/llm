@@ -65,6 +65,18 @@ module LLM
       end
     end
 
+    def completion_prompt_tokens(raw)
+      raw.dig("usageMetadata", "promptTokenCount")
+    end
+
+    def completion_completion_tokens(raw)
+      raw.dig("usageMetadata", "candidatesTokenCount")
+    end
+
+    def completion_total_tokens(raw)
+      raw.dig("usageMetadata", "totalTokenCount")
+    end
+
     def auth(req)
       req.path.replace [req.path, URI.encode_www_form(key: @secret)].join("?")
     end

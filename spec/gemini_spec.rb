@@ -84,7 +84,7 @@ RSpec.describe "LLM::Gemini" do
     let(:completion) { gemini.complete("Hello!") }
 
     it "has model" do
-      expect(completion).to have_attributes(model: "gemini-1.5-flash-001")
+      expect(completion.model).to eq("gemini-1.5-flash-001")
     end
 
     it "has choices" do
@@ -96,6 +96,18 @@ RSpec.describe "LLM::Gemini" do
           )
         ]
       )
+    end
+
+    it "has prompt_tokens" do
+      expect(completion.prompt_tokens).to eq(2)
+    end
+
+    it "has completion_tokens" do
+      expect(completion.completion_tokens).to eq(10)
+    end
+
+    it "has total_tokens" do
+      expect(completion.total_tokens).to eq(12)
     end
   end
 
