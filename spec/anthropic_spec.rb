@@ -65,6 +65,18 @@ RSpec.describe "LLM::Anthropic" do
         ]
       )
     end
+
+    it "has prompt_tokens" do
+      expect(completion.prompt_tokens).to eq(2095)
+    end
+
+    it "has completion_tokens" do
+      expect(completion.completion_tokens).to eq(503)
+    end
+
+    it "has total_tokens" do
+      expect(completion.total_tokens).to eq(2095 + 503)
+    end
   end
 
   it "returns an authentication error", :auth_error do

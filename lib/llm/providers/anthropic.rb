@@ -56,6 +56,14 @@ module LLM
       raw["content"].map { LLM::Message.new("assistant", _1["text"]) }
     end
 
+    def completion_prompt_tokens(raw)
+      raw.dig("usage", "input_tokens")
+    end
+
+    def completion_completion_tokens(raw)
+      raw.dig("usage", "output_tokens")
+    end
+
     def auth(req)
       req["x-api-key"] = @secret
     end
