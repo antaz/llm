@@ -6,12 +6,14 @@ A lightweight Ruby library for interacting with multiple LLM providers
 
 ## Usage
 
+```ruby
 LLM
   .openai(OPENAI_KEY)
   .chat("Be a helpful assistant", :system)
   .chat("How many moons Jupiter has?")
   .thread
   .last # => "As of my last update in October 2023, Jupiter has 80 known moons. The four largest moons, known as the Galilean moons ..."
+```
 
 ## Available providers
 
