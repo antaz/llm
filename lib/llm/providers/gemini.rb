@@ -6,6 +6,12 @@ module LLM
   # [Gemini](https://ai.google.dev/)
   class Gemini < Provider
     module Parsable
+      def parse_embedding(raw)
+        {
+          embeddings: raw.dig("embedding", "values")
+        }
+      end
+
       def parse_completion(raw)
         {
           model: raw["modelVersion"],
@@ -34,6 +40,24 @@ module LLM
     # @param secret (see LLM::Provider#initialize)
     def initialize(secret)
       super(secret, HOST)
+    end
+
+    def embed(input, **params)
+      path = [PATH, "text-embedding-004"].join("/")
+      req = Net::HTTP::Post.new [path, "embedContent"].join(":")
+
+      body = {
+        content: {
+          parts: [{text: input}]
+        }
+      }
+
+      req.content_type = "application/json"
+      req.body = JSON.generate body
+      auth req
+      res = request @http, req
+
+      Response::Embedding.new(res.body, self)
     end
 
     def complete(prompt, role = :user, **params)
