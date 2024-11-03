@@ -34,7 +34,9 @@ module LLM
     # @return [Integer]
     #   Returns the total count of tokens
     def total_tokens
-      @provider.__send__ :completion_total_tokens, raw
+      @provider.respond_to?(:completion_total_tokens) ?
+        @provider.__send__(:completion_total_tokens, raw) :
+        prompt_tokens + completion_tokens
     end
   end
 end
