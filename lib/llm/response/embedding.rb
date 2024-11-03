@@ -10,8 +10,8 @@ module LLM
       parsed[:embeddings]
     end
 
-    def prompt_tokens
-      parsed[:prompt_tokens]
+    def total_tokens
+      parsed[:total_tokens]
     end
 
     private
