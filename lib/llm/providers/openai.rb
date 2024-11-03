@@ -5,6 +5,22 @@ module LLM
   # The OpenAI class implements a provider for
   # [OpenAI](https://platform.openai.com/)
   class OpenAI < Provider
+    module Parsable
+      def parse_completion(raw)
+        {
+          model: raw["model"],
+          choices: raw["choices"].map do
+            LLM::Message.new(*_1["message"].values_at("role", "content"))
+          end,
+          prompt_tokens: raw.dig("usage", "prompt_tokens"),
+          completion_tokens: raw.dig("usage", "completion_tokens"),
+          total_tokens: raw.dig("usage", "total_tokens")
+        }
+      end
+    end
+
+    include Parsable
+
     HOST = "api.openai.com"
     PATH = "/v1"
 
@@ -43,34 +59,6 @@ module LLM
     end
 
     private
-
-    ##
-    # @param (see LLM::Provider#completion_model)
-    # @return (see LLM::Provider#completion_model)
-    def completion_model(raw)
-      raw["model"]
-    end
-
-    ##
-    # @param (see LLM::Provider#completion_choices)
-    # @return (see LLM::Provider#completion_choices)
-    def completion_choices(raw)
-      raw["choices"].map do
-        LLM::Message.new(*_1["message"].values_at("role", "content"))
-      end
-    end
-
-    def completion_prompt_tokens(raw)
-      raw.dig("usage", "prompt_tokens")
-    end
-
-    def completion_completion_tokens(raw)
-      raw.dig("usage", "completion_tokens")
-    end
-
-    def completion_total_tokens(raw)
-      raw.dig("usage", "total_tokens")
-    end
 
     def auth(req)
       req["Authorization"] = "Bearer #{@secret}"

@@ -5,6 +5,24 @@ module LLM
   # The Gemini class implements a provider for
   # [Gemini](https://ai.google.dev/)
   class Gemini < Provider
+    module Parsable
+      def parse_completion(raw)
+        {
+          model: raw["modelVersion"],
+          choices: raw["candidates"].map do
+            LLM::Message.new(
+              _1.dig("content", "role"),
+              _1.dig("content", "parts", 0, "text")
+            )
+          end,
+          prompt_tokens: raw.dig("usageMetadata", "promptTokenCount"),
+          completion_tokens: raw.dig("usageMetadata", "candidatesTokenCount")
+        }
+      end
+    end
+
+    include Parsable
+
     HOST = "generativelanguage.googleapis.com"
     PATH = "/v1beta/models"
 
@@ -45,37 +63,6 @@ module LLM
     end
 
     private
-
-    ##
-    # @param (see LLM::Provider#completion_model)
-    # @return (see LLM::Provider#completion_model)
-    def completion_model(raw)
-      raw["modelVersion"]
-    end
-
-    ##
-    # @param (see LLM::Provider#completion_messages)
-    # @return (see LLM::Provider#completion_messages)
-    def completion_choices(raw)
-      raw["candidates"].map do
-        LLM::Message.new(
-          _1.dig("content", "role"),
-          _1.dig("content", "parts", 0, "text")
-        )
-      end
-    end
-
-    def completion_prompt_tokens(raw)
-      raw.dig("usageMetadata", "promptTokenCount")
-    end
-
-    def completion_completion_tokens(raw)
-      raw.dig("usageMetadata", "candidatesTokenCount")
-    end
-
-    def completion_total_tokens(raw)
-      raw.dig("usageMetadata", "totalTokenCount")
-    end
 
     def auth(req)
       req.path.replace [req.path, URI.encode_www_form(key: @secret)].join("?")

@@ -5,6 +5,22 @@ module LLM
   # The Anthropic class implements a provider for
   # [Anthropic](https://www.anthropic.com)
   class Anthropic < Provider
+    module Parsable
+      def parse_completion(raw)
+        {
+          model: raw["model"],
+          choices: raw["content"].map do
+            # TODO: don't hardcode role
+            LLM::Message.new("assistant", _1["text"])
+          end,
+          prompt_tokens: raw.dig("usage", "input_tokens"),
+          completion_tokens: raw.dig("usage", "output_tokens")
+        }
+      end
+    end
+
+    include Parsable
+
     HOST = "api.anthropic.com"
     PATH = "/v1"
 
@@ -41,28 +57,6 @@ module LLM
     end
 
     private
-
-    ##
-    # @param (see LLM::Provider#completion_model)
-    # @return (see LLM::Provider#completion_model)
-    def completion_model(raw)
-      raw["model"]
-    end
-
-    ##
-    # @param (see LLM::Provider#completion_messages)
-    # @return (see LLM::Provider#completion_messages)
-    def completion_choices(raw)
-      raw["content"].map { LLM::Message.new("assistant", _1["text"]) }
-    end
-
-    def completion_prompt_tokens(raw)
-      raw.dig("usage", "input_tokens")
-    end
-
-    def completion_completion_tokens(raw)
-      raw.dig("usage", "output_tokens")
-    end
 
     def auth(req)
       req["x-api-key"] = @secret
