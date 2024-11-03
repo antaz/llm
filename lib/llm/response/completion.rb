@@ -41,6 +41,10 @@ module LLM
 
     private
 
+    ##
+    # @private
+    # @return [Hash]
+    #   Returns the parsed completion response from the provider
     def parsed
       @parsed ||= @provider.parse_completion(raw)
     end
