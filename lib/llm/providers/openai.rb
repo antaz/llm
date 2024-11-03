@@ -11,7 +11,9 @@ module LLM
           model: raw["model"],
           embeddings: raw.dig("data").map do |data|
             data["embedding"]
-          end
+          end,
+          prompt_tokens: raw.dig("usage", "prompt_tokens"),
+          total_tokens: raw.dig("usage", "total_tokens")
         }
       end
 
