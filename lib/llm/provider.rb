@@ -25,26 +25,25 @@ module LLM
     # Completes a given prompt using the LLM
     # @param [String] prompt
     #  The input prompt to be completed
+    # @param [Symbol] role
+    #  The role of the prompt (e.g. :user, :system)
     # @raise [NotImplementedError]
     #  When the method is not implemented by a subclass
+    # @return [LLM::Response::Completion]
     def complete(prompt, role = :user, **params)
       raise NotImplementedError
     end
 
+    ##
+    # @param prompt (see LLM::Provider#complete)
+    # @param role (see LLM::Provider#complete)
+    # @raise (see LLM::Provider#complete)
+    # @return [LLM::Conversation]
     def chat(prompt, role = :user, **params)
       raise NotImplementedError
     end
 
     private
-
-    ##
-    # @param [Hash] raw
-    #  A provider-specific Hash object
-    # @return [Array<LLM::Message>]
-    #  Returns an array of Message objects
-    def completion_messages(raw)
-      raise NotImplementedError
-    end
 
     ##
     # Prepares a request for authentication
@@ -53,6 +52,15 @@ module LLM
     # @raise [NotImplementedError]
     #  (see LLM::Provider#complete)
     def auth(req)
+      raise NotImplementedError
+    end
+
+    ##
+    # @return [Module]
+    #  Returns the module responsible for parsing the LLM response
+    # @raise [NotImplementedError]
+    #  (see LLM::Provider#complete)
+    def response_parser
       raise NotImplementedError
     end
   end
