@@ -2,6 +2,10 @@
 
 class LLM::Gemini
   module ResponseParser
+    ##
+    # @param [Hash] raw
+    #  The raw response from the LLM provider
+    # @return [Hash]
     def parse_completion(raw)
       {
         model: raw["modelVersion"],
