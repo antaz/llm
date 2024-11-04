@@ -55,5 +55,11 @@ module LLM
     def auth(req)
       raise NotImplementedError
     end
+
+    ##
+    # @return [Module]
+    def response_parser
+      raise NotImplementedError
+    end
   end
 end

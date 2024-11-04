@@ -5,27 +5,10 @@ module LLM
   # The Gemini class implements a provider for
   # [Gemini](https://ai.google.dev/)
   class Gemini < Provider
-    module Parsable
-      def parse_completion(raw)
-        {
-          model: raw["modelVersion"],
-          choices: raw["candidates"].map do
-            LLM::Message.new(
-              _1.dig("content", "role"),
-              _1.dig("content", "parts", 0, "text")
-            )
-          end,
-          prompt_tokens: raw.dig("usageMetadata", "promptTokenCount"),
-          completion_tokens: raw.dig("usageMetadata", "candidatesTokenCount")
-        }
-      end
-    end
-
-    include Parsable
+    require_relative "gemini/response_parser"
 
     HOST = "generativelanguage.googleapis.com"
     PATH = "/v1beta/models"
-
     DEFAULT_PARAMS = {
       model: "gemini-1.5-flash"
     }.freeze
@@ -53,7 +36,7 @@ module LLM
       auth req
       res = request @http, req
 
-      Response::Completion.new(res.body, self)
+      Response::Completion.new(res.body, self).extend(response_parser)
     end
 
     def chat(prompt, role = :user, **params)
@@ -66,6 +49,10 @@ module LLM
 
     def auth(req)
       req.path.replace [req.path, URI.encode_www_form(key: @secret)].join("?")
+    end
+
+    def response_parser
+      LLM::Gemini::ResponseParser
     end
   end
 end

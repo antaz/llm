@@ -5,25 +5,10 @@ module LLM
   # The Anthropic class implements a provider for
   # [Anthropic](https://www.anthropic.com)
   class Anthropic < Provider
-    module Parsable
-      def parse_completion(raw)
-        {
-          model: raw["model"],
-          choices: raw["content"].map do
-            # TODO: don't hardcode role
-            LLM::Message.new("assistant", _1["text"])
-          end,
-          prompt_tokens: raw.dig("usage", "input_tokens"),
-          completion_tokens: raw.dig("usage", "output_tokens")
-        }
-      end
-    end
-
-    include Parsable
+    require_relative "anthropic/response_parser"
 
     HOST = "api.anthropic.com"
     PATH = "/v1"
-
     DEFAULT_PARAMS = {
       model: "claude-3-5-sonnet-20240620"
     }.freeze
@@ -47,7 +32,7 @@ module LLM
       auth req
       res = request @http, req
 
-      Response::Completion.new(res.body, self)
+      Response::Completion.new(res.body, self).extend(response_parser)
     end
 
     def chat(prompt, role = :user, **params)
@@ -60,6 +45,10 @@ module LLM
 
     def auth(req)
       req["x-api-key"] = @secret
+    end
+
+    def response_parser
+      LLM::Anthropic::ResponseParser
     end
   end
 end
