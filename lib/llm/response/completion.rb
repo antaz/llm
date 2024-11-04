@@ -46,7 +46,7 @@ module LLM
     # @return [Hash]
     #   Returns the parsed completion response from the provider
     def parsed
-      @parsed ||= @provider.parse_completion(raw)
+      @parsed ||= parse_completion(raw)
     end
   end
 end

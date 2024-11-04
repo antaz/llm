@@ -5,36 +5,10 @@ module LLM
   # The OpenAI class implements a provider for
   # [OpenAI](https://platform.openai.com/)
   class OpenAI < Provider
-    module Parsable
-      def parse_embedding(raw)
-        {
-          model: raw["model"],
-          embeddings: raw.dig("data").map do |data|
-            data["embedding"]
-          end,
-          prompt_tokens: raw.dig("usage", "prompt_tokens"),
-          total_tokens: raw.dig("usage", "total_tokens")
-        }
-      end
-
-      def parse_completion(raw)
-        {
-          model: raw["model"],
-          choices: raw["choices"].map do
-            LLM::Message.new(*_1["message"].values_at("role", "content"))
-          end,
-          prompt_tokens: raw.dig("usage", "prompt_tokens"),
-          completion_tokens: raw.dig("usage", "completion_tokens"),
-          total_tokens: raw.dig("usage", "total_tokens")
-        }
-      end
-    end
-
-    include Parsable
+    require_relative "openai/response_parser"
 
     HOST = "api.openai.com"
     PATH = "/v1"
-
     DEFAULT_PARAMS = {
       model: "gpt-4o-mini"
     }.freeze
@@ -78,7 +52,7 @@ module LLM
 
       res = request @http, req
 
-      Response::Completion.new(res.body, self)
+      Response::Completion.new(res.body, self).extend(response_parser)
     end
 
     def chat(prompt, role = :user, **params)
@@ -91,6 +65,10 @@ module LLM
 
     def auth(req)
       req["Authorization"] = "Bearer #{@secret}"
+    end
+
+    def response_parser
+      LLM::OpenAI::ResponseParser
     end
   end
 end
