@@ -5,9 +5,10 @@ module LLM
   # The Anthropic class implements a provider for
   # [Anthropic](https://www.anthropic.com)
   class Anthropic < Provider
+    require_relative "anthropic/response_parser"
+
     HOST = "api.anthropic.com"
     PATH = "/v1"
-
     DEFAULT_PARAMS = {
       model: "claude-3-5-sonnet-20240620"
     }.freeze
@@ -16,6 +17,22 @@ module LLM
     # @param secret (see LLM::Provider#initialize)
     def initialize(secret)
       super(secret, HOST)
+    end
+
+    def embed(input, **params)
+      req = Net::HTTP::Post.new ["api.voyageai.com/v1", "embeddings"].join("/")
+      body = {
+        input: input,
+        model: "voyage-2",
+        **params
+      }
+
+      req.content_type = "application/json"
+      req.body = JSON.generate body
+      auth req
+      res = request @http, req
+
+      Response::Embedding.new(res.body, self)
     end
 
     def complete(prompt, role = :user, **params)
@@ -31,7 +48,7 @@ module LLM
       auth req
       res = request @http, req
 
-      Response::Completion.new(res.body, self)
+      Response::Completion.new(res.body, self).extend(response_parser)
     end
 
     def chat(prompt, role = :user, **params)
@@ -42,30 +59,12 @@ module LLM
 
     private
 
-    ##
-    # @param (see LLM::Provider#completion_model)
-    # @return (see LLM::Provider#completion_model)
-    def completion_model(raw)
-      raw["model"]
-    end
-
-    ##
-    # @param (see LLM::Provider#completion_messages)
-    # @return (see LLM::Provider#completion_messages)
-    def completion_choices(raw)
-      raw["content"].map { LLM::Message.new("assistant", _1["text"]) }
-    end
-
-    def completion_prompt_tokens(raw)
-      raw.dig("usage", "input_tokens")
-    end
-
-    def completion_completion_tokens(raw)
-      raw.dig("usage", "output_tokens")
-    end
-
     def auth(req)
       req["x-api-key"] = @secret
+    end
+
+    def response_parser
+      LLM::Anthropic::ResponseParser
     end
   end
 end
