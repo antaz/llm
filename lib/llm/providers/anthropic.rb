@@ -19,6 +19,22 @@ module LLM
       super(secret, HOST)
     end
 
+    def embed(input, **params)
+      req = Net::HTTP::Post.new ["api.voyageai.com/v1", "embeddings"].join("/")
+      body = {
+        input: input,
+        model: "voyage-2",
+        **params
+      }
+
+      req.content_type = "application/json"
+      req.body = JSON.generate body
+      auth req
+      res = request @http, req
+
+      Response::Embedding.new(res.body, self)
+    end
+
     def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new [PATH, "messages"].join("/")
       body = {

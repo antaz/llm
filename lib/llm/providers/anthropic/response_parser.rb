@@ -2,6 +2,16 @@
 
 class LLM::Anthropic
   module ResponseParser
+    def parse_embedding(raw)
+      {
+        model: raw["model"],
+        embeddings: raw.dig("data").map do |data|
+          data["embedding"]
+        end,
+        total_tokens: raw.dig("usage", "total_tokens")
+      }
+    end
+
     ##
     # @param [Hash] raw
     #  The raw response from the LLM provider

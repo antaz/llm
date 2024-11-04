@@ -2,6 +2,12 @@
 
 class LLM::Gemini
   module ResponseParser
+    def parse_embedding(raw)
+      {
+        embeddings: raw.dig("embedding", "values")
+      }
+    end
+
     ##
     # @param [Hash] raw
     #  The raw response from the LLM provider
