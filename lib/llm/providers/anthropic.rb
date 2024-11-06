@@ -9,9 +9,7 @@ module LLM
 
     HOST = "api.anthropic.com"
     PATH = "/v1"
-    DEFAULT_PARAMS = {
-      model: "claude-3-5-sonnet-20240620"
-    }.freeze
+    DEFAULT_PARAMS = { model: "claude-3-5-sonnet-20240620" }.freeze
 
     ##
     # @param secret (see LLM::Provider#initialize)
@@ -21,33 +19,19 @@ module LLM
 
     def embed(input, **params)
       req = Net::HTTP::Post.new ["api.voyageai.com/v1", "embeddings"].join("/")
-      body = {
-        input: input,
-        model: "voyage-2",
-        **params
-      }
-
-      req.content_type = "application/json"
-      req.body = JSON.generate body
-      auth req
+      body = {input:, model: "voyage-2"}.merge!(params)
+      req = preflight(req, body)
       res = request @http, req
-
       Response::Embedding.new(res.body, self)
     end
 
     def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new [PATH, "messages"].join("/")
-      body = {
-        messages: ((params[:messages] || []) + [Message.new(role.to_s, prompt)]).map(&:to_h),
-        **DEFAULT_PARAMS,
-        **params
-      }
-
-      req.content_type = "application/json"
-      req.body = JSON.generate body
-      auth req
+      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
+      params = DEFAULT_PARAMS.merge(params)
+      body = {messages: messages.map(&:to_h)}.merge!(params)
+      req = preflight(req, body)
       res = request @http, req
-
       Response::Completion.new(res.body, self).extend(response_parser)
     end
 

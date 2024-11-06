@@ -9,9 +9,7 @@ module LLM
 
     HOST = "api.openai.com"
     PATH = "/v1"
-    DEFAULT_PARAMS = {
-      model: "gpt-4o-mini"
-    }.freeze
+    DEFAULT_PARAMS = {model: "gpt-4o-mini"}.freeze
 
     ##
     # @param secret (see LLM::Provider#initialize)
@@ -21,37 +19,19 @@ module LLM
 
     def embed(input, **params)
       req = Net::HTTP::Post.new [PATH, "embeddings"].join("/")
-
-      body = {
-        input: input,
-        model: "text-embedding-3-small",
-        **params
-      }
-
-      req.content_type = "application/json"
-      req.body = JSON.generate(body)
-      auth req
-
+      body = {input:, model: "text-embedding-3-small"}.merge!(params)
+      req = preflight(req, body)
       res = request @http, req
-
       Response::Embedding.new(res.body, self)
     end
 
     def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new [PATH, "chat", "completions"].join("/")
-
-      body = {
-        messages: ((params[:messages] || []) + [Message.new(role.to_s, prompt)]).map(&:to_h),
-        **DEFAULT_PARAMS,
-        **params.except(:messages)
-      }
-
-      req.content_type = "application/json"
-      req.body = JSON.generate(body)
-      auth req
-
-      res = request @http, req
-
+      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
+      params = DEFAULT_PARAMS.merge(params)
+      body = {messages: messages.map(&:to_h)}.merge!(params)
+      req = preflight(req, body)
+      res = request(@http, req)
       Response::Completion.new(res.body, self).extend(response_parser)
     end
 

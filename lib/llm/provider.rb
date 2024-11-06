@@ -65,5 +65,14 @@ module LLM
     def response_parser
       raise NotImplementedError
     end
+
+    ##
+    # Prepares a request before sending it
+    def preflight(req, body)
+      req.content_type = "application/json"
+      req.body = JSON.generate(body)
+      auth(req)
+      req
+    end
   end
 end
