@@ -40,7 +40,9 @@ module LLM
     # @raise (see LLM::Provider#complete)
     # @return [LLM::Conversation]
     def chat(prompt, role = :user, **params)
-      raise NotImplementedError
+      completion = complete(prompt, role, **params)
+      thread = [*params[:messages], Message.new(role.to_s, prompt), completion.choices.first]
+      Conversation.new(self, thread)
     end
 
     private
