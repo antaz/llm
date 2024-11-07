@@ -7,6 +7,8 @@ module LLM
   require_relative "llm/response"
   require_relative "llm/provider"
   require_relative "llm/conversation"
+  require_relative "llm/lazy_conversation"
+  require_relative "llm/lazy_thread"
 
   module_function
 
