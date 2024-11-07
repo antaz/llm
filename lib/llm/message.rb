@@ -11,7 +11,6 @@ module LLM
 
     def to_h
       h = {role:}
-
       if URI === @content
         h[:content] = [{
           type: :image_url,
@@ -21,7 +20,6 @@ module LLM
         h[:type] = :text
         h[:content] = @content.to_s
       end
-
       h
     end
   end
