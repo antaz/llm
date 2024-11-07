@@ -9,7 +9,7 @@ module LLM
 
     HOST = "api.anthropic.com"
     PATH = "/v1"
-    DEFAULT_PARAMS = { model: "claude-3-5-sonnet-20240620" }.freeze
+    DEFAULT_PARAMS = {model: "claude-3-5-sonnet-20240620"}.freeze
 
     ##
     # @param secret (see LLM::Provider#initialize)

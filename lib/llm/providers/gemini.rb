@@ -9,7 +9,7 @@ module LLM
 
     HOST = "generativelanguage.googleapis.com"
     PATH = "/v1beta/models"
-    DEFAULT_PARAMS = { model: "gemini-1.5-flash" }.freeze
+    DEFAULT_PARAMS = {model: "gemini-1.5-flash"}.freeze
 
     ##
     # @param secret (see LLM::Provider#initialize)
@@ -20,7 +20,7 @@ module LLM
     def embed(input, **params)
       path = [PATH, "text-embedding-004"].join("/")
       req = Net::HTTP::Post.new [path, "embedContent"].join(":")
-      body = { content: { parts: [{text: input}] } }
+      body = {content: {parts: [{text: input}]}}
       req = preflight(req, body)
       res = request @http, req
       Response::Embedding.new(res.body, self)
