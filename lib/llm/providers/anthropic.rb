@@ -51,12 +51,6 @@ module LLM
       Response::Completion.new(res.body, self).extend(response_parser)
     end
 
-    def chat(prompt, role = :user, **params)
-      completion = complete(prompt, **params)
-      thread = [*params[:messages], Message.new(role.to_s, prompt), completion.choices.first]
-      Conversation.new(self, thread)
-    end
-
     private
 
     def auth(req)
