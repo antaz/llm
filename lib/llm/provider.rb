@@ -35,6 +35,7 @@ module LLM
     end
 
     ##
+    # Starts a new conversation
     # @param prompt (see LLM::Provider#complete)
     # @param role (see LLM::Provider#complete)
     # @raise (see LLM::Provider#complete)
