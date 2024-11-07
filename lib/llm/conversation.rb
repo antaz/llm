@@ -33,7 +33,7 @@ module LLM
         bot = @provider.chat(prompt, role, **params.merge(messages: @thread))
         # The last two elements of the thread include the
         # last input prompt, and the response from the LLM
-        @thread.concat(bot.thread[-2..-1])
+        @thread.concat(bot.thread[-2..])
       end
     end
   end
