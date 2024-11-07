@@ -11,11 +11,17 @@ module LLM
 
     def to_h
       h = {role:}
+
       if URI === @content
-        h.merge!({type: :image_url, content: @content.to_s})
+        h[:content] = [{
+          type: :image_url,
+          image_url: {url: @content.to_s}
+        }]
       else
-        h.merge!({type: :text, content: @content.to_s})
+        h[:type] = :text
+        h[:content] = @content.to_s
       end
+
       h
     end
   end
