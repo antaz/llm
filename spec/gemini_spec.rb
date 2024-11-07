@@ -81,7 +81,7 @@ RSpec.describe "LLM::Gemini" do
   end
 
   context "with successful completion", :success do
-    let(:completion) { gemini.complete("Hello!") }
+    let(:completion) { gemini.complete(LLM::Message.new("user", "Hello!")) }
 
     it "has model" do
       expect(completion.model).to eq("gemini-1.5-flash-001")
@@ -112,6 +112,6 @@ RSpec.describe "LLM::Gemini" do
   end
 
   it "returns an authentication error", :auth_error do
-    expect { gemini.complete("Hello!") }.to raise_error(LLM::Error::Unauthorized)
+    expect { gemini.complete(LLM::Message.new("user", "Hello!")) }.to raise_error(LLM::Error::Unauthorized)
   end
 end
