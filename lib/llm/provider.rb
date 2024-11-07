@@ -41,7 +41,7 @@ module LLM
     # @raise (see LLM::Provider#complete)
     # @return [LLM::Conversation]
     def chat(prompt, role = :user, **params)
-      completion = complete(prompt, role, **params)
+      completion = complete(Message.new(role, prompt), **params)
       thread = [*params[:messages], Message.new(role.to_s, prompt), completion.choices.first]
       Conversation.new(self, thread)
     end
