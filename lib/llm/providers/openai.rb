@@ -30,14 +30,11 @@ module LLM
       params = DEFAULT_PARAMS.merge(params)
       body = {messages: messages.map(&:to_h)}.merge!(params)
       req = preflight(req, body)
-      puts req.body
       if params[:stream]
         Fiber.new do
           @http.request(req) do |res|
             res.read_body do |chunk|
               chunk.scan(/^data:(.+)$/).each do |match|
-                break if match[0].strip == "[DONE]"
-                next if match[0].strip.empty?
                 Fiber.yield Response::Chunk.new(match[0], self).extend(response_parser)
               end
             end
