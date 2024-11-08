@@ -1,21 +1,8 @@
 # frozen_string_literal: true
 
 module LLM
-  class Response::Chunk < Response
-    ##
-    # @return [String]
-    #   Returns the model name used for the completion
-    def model
-      parsed[:model]
-    end
-
-    ##
-    # @return [Array<LLM::Message>]
-    #  Returns an array of messages
-    def choices
-      parsed[:choices]
-    end
-
+  require_relative "completion"
+  class Response::Chunk < Response::Completion
     private
 
     ##
