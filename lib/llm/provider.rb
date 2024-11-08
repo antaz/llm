@@ -41,6 +41,7 @@ module LLM
     # @raise (see LLM::Provider#complete)
     # @return [LLM::Conversation]
     def chat(prompt, role = :user, **params)
+      prompt = transform_prompt(prompt)
       completion = complete(Message.new(role, prompt), **params)
       thread = [*params[:messages], Message.new(role.to_s, prompt), completion.choices.first]
       Conversation.new(self, thread)
@@ -84,6 +85,16 @@ module LLM
       req.body = JSON.generate(body)
       auth(req)
       req
+    end
+
+    ##
+    # Transforms the prompt before sending it
+    # @param [String] prompt
+    #  The prompt to transform
+    # @return [String]
+    #  The transformed prompt
+    def transform_prompt(prompt)
+      prompt
     end
   end
 end
