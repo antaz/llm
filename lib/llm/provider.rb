@@ -89,9 +89,9 @@ module LLM
 
     ##
     # Transforms the prompt before sending it
-    # @param [String] prompt
+    # @param [String, URI, Object] prompt
     #  The prompt to transform
-    # @return [String]
+    # @return [Object]
     #  The transformed prompt
     def transform_prompt(prompt)
       prompt
