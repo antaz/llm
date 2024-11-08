@@ -43,5 +43,11 @@ module LLM
     def response_parser
       LLM::OpenAI::ResponseParser
     end
+
+    def transform_prompt(prompt)
+      if URI === prompt
+        return [{type: :image_url, image_url: {url: prompt.to_s}}]
+      end
+    end
   end
 end
