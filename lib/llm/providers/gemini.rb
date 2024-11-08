@@ -9,7 +9,6 @@ module LLM
     require_relative "gemini/response_parser"
 
     HOST = "generativelanguage.googleapis.com"
-    PATH = "/v1beta/models"
     DEFAULT_PARAMS = {model: "gemini-1.5-flash"}.freeze
 
     ##
@@ -19,7 +18,7 @@ module LLM
     end
 
     def embed(input, **params)
-      path = [PATH, "text-embedding-004"].join("/")
+      path = ["/v1beta/models", "text-embedding-004"].join("/")
       req = Net::HTTP::Post.new [path, "embedContent"].join(":")
       body = {content: {parts: [{text: input}]}}
       req = preflight(req, body)
@@ -29,7 +28,7 @@ module LLM
 
     def complete(prompt, role = :user, **params)
       params = DEFAULT_PARAMS.merge(params)
-      path = [PATH, params.delete(:model)].join("/")
+      path = ["/v1beta/models", params.delete(:model)].join("/")
       req = Net::HTTP::Post.new [path, "generateContent"].join(":")
       messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
       body = {
