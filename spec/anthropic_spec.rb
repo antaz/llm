@@ -49,7 +49,7 @@ RSpec.describe "LLM::Anthropic" do
   end
 
   context "with successful completion", :success do
-    let(:completion) { anthropic.complete("Hello, world") }
+    let(:completion) { anthropic.complete(LLM::Message.new("user", "Hello, world")) }
 
     it "has model" do
       expect(completion).to have_attributes(model: "claude-3-5-sonnet-20240620")
@@ -80,6 +80,6 @@ RSpec.describe "LLM::Anthropic" do
   end
 
   it "returns an authentication error", :auth_error do
-    expect { anthropic.complete("Hello!") }.to raise_error(LLM::Error::Unauthorized)
+    expect { anthropic.complete(LLM::Message.new("user", "Hello!")) }.to raise_error(LLM::Error::Unauthorized)
   end
 end

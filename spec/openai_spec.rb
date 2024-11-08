@@ -62,7 +62,7 @@ RSpec.describe "LLM::OpenAI" do
   end
 
   context "with successful completion", :success do
-    let(:completion) { openai.complete("Hello!") }
+    let(:completion) { openai.complete(LLM::Message.new("user", "Hello!")) }
 
     it "has model" do
       expect(completion.model).to eq("gpt-4o-mini-2024-07-18")
@@ -94,11 +94,11 @@ RSpec.describe "LLM::OpenAI" do
 
   context "with an unauthorized error", :unauthorized do
     it "raises an error" do
-      expect { openai.complete("Hello!") }.to raise_error(LLM::Error::Unauthorized)
+      expect { openai.complete(LLM::Message.new("user", "Hello!")) }.to raise_error(LLM::Error::Unauthorized)
     end
 
     it "includes the response" do
-      openai.complete("Hello!")
+      openai.complete(LLM::Message.new("user", "Hello!"))
     rescue LLM::Error::Unauthorized => ex
       expect(ex.response).to be_kind_of(Net::HTTPResponse)
     end

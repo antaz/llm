@@ -8,7 +8,6 @@ module LLM
     require_relative "openai/response_parser"
 
     HOST = "api.openai.com"
-    PATH = "/v1"
     DEFAULT_PARAMS = {model: "gpt-4o-mini"}.freeze
 
     ##
@@ -18,16 +17,16 @@ module LLM
     end
 
     def embed(input, **params)
-      req = Net::HTTP::Post.new [PATH, "embeddings"].join("/")
+      req = Net::HTTP::Post.new ["/v1", "embeddings"].join("/")
       body = {input:, model: "text-embedding-3-small"}.merge!(params)
       req = preflight(req, body)
       res = request @http, req
       Response::Embedding.new(res.body, self)
     end
 
-    def complete(prompt, role = :user, **params)
-      req = Net::HTTP::Post.new [PATH, "chat", "completions"].join("/")
-      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
+    def complete(message, **params)
+      req = Net::HTTP::Post.new ["/v1", "chat", "completions"].join("/")
+      messages = [*(params.delete(:messages) || []), message]
       params = DEFAULT_PARAMS.merge(params)
       body = {messages: messages.map(&:to_h)}.merge!(params)
       req = preflight(req, body)
