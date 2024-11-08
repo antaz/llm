@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module LLM
-  require_relative "completion"
   class Response::Chunk < Response::Completion
     private
 
