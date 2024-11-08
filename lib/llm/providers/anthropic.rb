@@ -34,16 +34,6 @@ module LLM
       Response::Completion.new(res.body, self).extend(response_parser)
     end
 
-    private
-
-    def auth(req)
-      req["x-api-key"] = @secret
-    end
-
-    def response_parser
-      LLM::Anthropic::ResponseParser
-    end
-
     ##
     # @param prompt (see LLM::Provider#transform_prompt)
     # @return (see LLM::Provider#transform_prompt)
@@ -60,6 +50,16 @@ module LLM
       else
         prompt
       end
+    end
+
+    private
+
+    def auth(req)
+      req["x-api-key"] = @secret
+    end
+
+    def response_parser
+      LLM::Anthropic::ResponseParser
     end
   end
 end
