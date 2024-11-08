@@ -3,6 +3,7 @@
 module LLM
   class Response
     require "json"
+    require_relative "response/chunk"
     require_relative "response/completion"
     require_relative "response/embedding"
 
