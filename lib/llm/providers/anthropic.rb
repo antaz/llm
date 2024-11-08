@@ -43,5 +43,17 @@ module LLM
     def response_parser
       LLM::Anthropic::ResponseParser
     end
+
+    def transform_prompt(prompt)
+      return unless URI === prompt
+      [{
+        type: :image,
+        source: {
+          type: :base64,
+          media_type: prompt.content_type,
+          data: [prompt.to_s].pack('m0')
+        }
+      }]
+    end
   end
 end
