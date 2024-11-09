@@ -22,6 +22,14 @@ module LLM
     end
 
     ##
+    # Returns an inspection of the provider object
+    # @return [String]
+    # @note The secret key is redacted in inspect for security reasons
+    def inspect
+      "#<#{self.class.name}:0x#{object_id.to_s(16)} @secret=[REDACTED] @http=#{@http.inspect}>"
+    end
+
+    ##
     # Completes a given prompt using the LLM
     # @param [String] prompt
     #  The input prompt to be completed
