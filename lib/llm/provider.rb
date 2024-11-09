@@ -57,6 +57,16 @@ module LLM
       LazyConversation.new(self).chat(prompt, role, **params)
     end
 
+    ##
+    # Transforms the prompt before sending it
+    # @param [String, URI, Object] prompt
+    #  The prompt to transform
+    # @return [Object]
+    #  The transformed prompt
+    def transform_prompt(prompt)
+      prompt
+    end
+
     private
 
     ##
@@ -85,16 +95,6 @@ module LLM
       req.body = JSON.generate(body)
       auth(req)
       req
-    end
-
-    ##
-    # Transforms the prompt before sending it
-    # @param [String, URI, Object] prompt
-    #  The prompt to transform
-    # @return [Object]
-    #  The transformed prompt
-    def transform_prompt(prompt)
-      prompt
     end
   end
 end

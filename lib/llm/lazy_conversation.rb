@@ -29,7 +29,13 @@ module LLM
     # @param prompt (see LLM::Provider#prompt)
     # @return [LLM::Conversation]
     def chat(prompt, role = :user, **params)
-      tap { @thread << [prompt, role, params] }
+      tap { @thread << [transform_prompt(prompt), role, params] }
+    end
+
+    private
+
+    def transform_prompt(...)
+      @provider.transform_prompt(...)
     end
   end
 end
