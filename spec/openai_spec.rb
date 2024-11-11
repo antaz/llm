@@ -61,6 +61,22 @@ RSpec.describe "LLM::OpenAI" do
       )
   end
 
+  before(:each, :bad_request) do
+    stub_request(:post, "https://api.openai.com/v1/chat/completions")
+      .with(headers: {"Content-Type" => "application/json"})
+      .to_return(
+        status: 400,
+        body: {
+          "error": {
+            "message": "Failed to download image from /path/to/nowhere.bin. Image URL is invalid.",
+            "type": "invalid_request_error",
+            "param": nil,
+            "code": "invalid_image_url"
+          }
+        }.to_json,
+      )
+  end
+
   context "with successful completion", :success do
     let(:completion) { openai.complete(LLM::Message.new("user", "Hello!")) }
 
@@ -101,6 +117,20 @@ RSpec.describe "LLM::OpenAI" do
       openai.complete(LLM::Message.new("user", "Hello!"))
     rescue LLM::Error::Unauthorized => ex
       expect(ex.response).to be_kind_of(Net::HTTPResponse)
+    end
+  end
+
+  context "with a bad request", :bad_request do
+    subject(:chat) { openai.chat(URI("/path/to/nowhere.bin")) }
+
+    it "raises an error" do
+      expect { chat } .to raise_error(LLM::Error::HTTPError)
+    end
+
+    it "is a bad request" do
+      chat
+    rescue LLM::Error => ex
+      expect(ex.response).to be_instance_of(Net::HTTPBadRequest)
     end
   end
 end
