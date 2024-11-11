@@ -5,6 +5,7 @@ module LLM
   # The Gemini class implements a provider for
   # [Gemini](https://ai.google.dev/)
   class Gemini < Provider
+    require_relative "gemini/error_handler"
     require_relative "gemini/response_parser"
 
     HOST = "generativelanguage.googleapis.com"
@@ -48,6 +49,10 @@ module LLM
 
     def response_parser
       LLM::Gemini::ResponseParser
+    end
+
+    def error_handler
+      LLM::Gemini::ErrorHandler
     end
   end
 end
