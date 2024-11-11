@@ -67,13 +67,13 @@ RSpec.describe "LLM::OpenAI" do
       .to_return(
         status: 400,
         body: {
-          "error": {
-            "message": "Failed to download image from /path/to/nowhere.bin. Image URL is invalid.",
-            "type": "invalid_request_error",
-            "param": nil,
-            "code": "invalid_image_url"
+          error: {
+            message: "Failed to download image from /path/to/nowhere.bin. Image URL is invalid.",
+            type: "invalid_request_error",
+            param: nil,
+            code: "invalid_image_url"
           }
-        }.to_json,
+        }.to_json
       )
   end
 
@@ -124,7 +124,7 @@ RSpec.describe "LLM::OpenAI" do
     subject(:chat) { openai.chat(URI("/path/to/nowhere.bin")) }
 
     it "raises an error" do
-      expect { chat } .to raise_error(LLM::Error::BadResponse)
+      expect { chat }.to raise_error(LLM::Error::BadResponse)
     end
 
     it "responds with bad request" do
