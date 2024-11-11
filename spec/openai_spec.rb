@@ -127,7 +127,7 @@ RSpec.describe "LLM::OpenAI" do
       expect { chat } .to raise_error(LLM::Error::BadResponse)
     end
 
-    it "is a bad request" do
+    it "responds with bad request" do
       chat
     rescue LLM::Error => ex
       expect(ex.response).to be_instance_of(Net::HTTPBadRequest)
