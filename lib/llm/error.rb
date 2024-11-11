@@ -10,7 +10,7 @@ module LLM
 
     ##
     # The superclass of all HTTP protocol errors
-    class HTTPError < Error
+    class BadResponse < Error
       ##
       # @return [Net::HTTPResponse]
       #  Returns the response associated with an error
@@ -19,10 +19,10 @@ module LLM
 
     ##
     # HTTPUnauthorized
-    Unauthorized = Class.new(HTTPError)
+    Unauthorized = Class.new(BadResponse)
 
     ##
     # HTTPTooManyRequests
-    RateLimit = Class.new(HTTPError)
+    RateLimit = Class.new(BadResponse)
   end
 end

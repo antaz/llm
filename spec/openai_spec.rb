@@ -124,7 +124,7 @@ RSpec.describe "LLM::OpenAI" do
     subject(:chat) { openai.chat(URI("/path/to/nowhere.bin")) }
 
     it "raises an error" do
-      expect { chat } .to raise_error(LLM::Error::HTTPError)
+      expect { chat } .to raise_error(LLM::Error::BadResponse)
     end
 
     it "is a bad request" do
