@@ -21,15 +21,23 @@ class LLM::Gemini
     def raise_error!
       case res
       when Net::HTTPBadRequest
-        # FIXME:
-        # Parse the response body for more information
-        # Based on the request body, raise a more specific error
-        raise LLM::Error::Unauthorized.new { _1.response = res }, "Authentication error"
+        reason = body.dig("error", "details", 0, "reason")
+        if reason == "API_KEY_INVALID"
+          raise LLM::Error::Unauthorized.new { _1.response = res }, "Authentication error"
+        else
+          raise LLM::Error::BadResponse.new { _1.response = res }, "Unexpected response"
+        end
       when Net::HTTPTooManyRequests
         raise LLM::Error::RateLimit.new { _1.response = res }, "Too many requests"
       else
         raise LLM::Error::BadResponse.new { _1.response = res }, "Unexpected response"
       end
+    end
+
+    private
+
+    def body
+      @body ||= JSON.parse(res.body)
     end
   end
 end
