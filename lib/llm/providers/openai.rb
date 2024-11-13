@@ -40,7 +40,7 @@ module LLM
       body = {prompt:, model: "dall-e-3", n: 1}.merge!(params)
       req = preflight(req, body)
       res = request @http, req
-      URI.parse(JSON.parse(res.body).dig("data").first.dig("url"))
+      Response::Vision.new(res.body, self).extend(response_parser)
     end
 
     ##
