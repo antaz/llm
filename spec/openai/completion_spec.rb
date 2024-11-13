@@ -80,55 +80,53 @@ RSpec.describe "LLM::OpenAI" do
   context "with successful completion", :success do
     let(:completion) { openai.complete(LLM::Message.new("user", "Hello!")) }
 
+    it "returns a completion" do
+      expect(completion).to be_a(LLM::Response::Completion)
+    end
+
     it "has model" do
       expect(completion.model).to eq("gpt-4o-mini-2024-07-18")
     end
 
     it "has choices" do
-      expect(completion).to be_a(LLM::Response::Completion).and have_attributes(
-        choices: [
-          have_attributes(
-            role: "assistant",
-            content: "Hello! How can I assist you today?"
-          )
-        ]
+      expect(completion.choices.first).to have_attributes(
+        role: "assistant",
+        content: "Hello! How can I assist you today?"
       )
     end
 
-    it "has prompt_tokens" do
-      expect(completion.prompt_tokens).to eq(9)
-    end
-
-    it "has completion_tokens" do
-      expect(completion.completion_tokens).to eq(9)
-    end
-
-    it "has total_tokens" do
-      expect(completion.total_tokens).to eq(18)
+    it "has token usage" do
+      expect(completion).to have_attributes(
+        prompt_tokens: 9,
+        completion_tokens: 9,
+        total_tokens: 18
+      )
     end
   end
 
   context "with an unauthorized error", :unauthorized do
+    let(:completion) { openai.complete(LLM::Message.new("user", "Hello!")) }
+
     it "raises an error" do
-      expect { openai.complete(LLM::Message.new("user", "Hello!")) }.to raise_error(LLM::Error::Unauthorized)
+      expect { completion }.to raise_error(LLM::Error::Unauthorized)
     end
 
-    it "includes the response" do
-      openai.complete(LLM::Message.new("user", "Hello!"))
+    it "includes a response" do
+      completion
     rescue LLM::Error::Unauthorized => ex
       expect(ex.response).to be_kind_of(Net::HTTPResponse)
     end
   end
 
   context "with a bad request", :bad_request do
-    subject(:chat) { openai.chat(URI("/path/to/nowhere.bin")) }
+    subject(:completion) { openai.complete(LLM::Message.new("user", URI("/path/to/nowhere.bin"))) }
 
     it "raises an error" do
-      expect { chat }.to raise_error(LLM::Error::BadResponse)
+      expect { completion }.to raise_error(LLM::Error::BadResponse)
     end
 
-    it "responds with bad request" do
-      chat
+    it "includees a response" do
+      completion
     rescue LLM::Error => ex
       expect(ex.response).to be_instance_of(Net::HTTPBadRequest)
     end
