@@ -80,7 +80,7 @@ RSpec.describe "LLM::OpenAI" do
   context "with successful completion", :success do
     let(:completion) { openai.complete(LLM::Message.new("user", "Hello!")) }
 
-    it "returns completion" do
+    it "returns a completion" do
       expect(completion).to be_a(LLM::Response::Completion)
     end
 

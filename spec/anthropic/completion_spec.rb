@@ -52,7 +52,7 @@ RSpec.describe "LLM::Anthropic" do
     let(:message) { LLM::Message.new("user", "Hello, world") }
     let(:completion) { anthropic.complete(message) }
 
-    it "returns completion" do
+    it "returns a completion" do
       expect(completion).to be_a(LLM::Response::Completion)
     end
 
