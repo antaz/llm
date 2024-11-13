@@ -32,7 +32,7 @@ RSpec.describe "LLM::Anthropic" do
       )
   end
 
-  before(:each, :auth_error) do
+  before(:each, :unauthorized) do
     stub_request(:post, "https://api.anthropic.com/v1/messages")
       .with(headers: {"Content-Type" => "application/json"})
       .to_return(
@@ -49,37 +49,44 @@ RSpec.describe "LLM::Anthropic" do
   end
 
   context "with successful completion", :success do
-    let(:completion) { anthropic.complete(LLM::Message.new("user", "Hello, world")) }
+    let(:message) { LLM::Message.new("user", "Hello, world") }
+    let(:completion) { anthropic.complete(message) }
+
+    it "returns completion" do
+      expect(completion).to be_a(LLM::Response::Completion)
+    end
 
     it "has model" do
-      expect(completion).to have_attributes(model: "claude-3-5-sonnet-20240620")
+      expect(completion.model).to eq("claude-3-5-sonnet-20240620")
     end
 
     it "has choices" do
-      expect(completion).to be_a(LLM::Response::Completion).and have_attributes(
-        choices: [
-          have_attributes(
-            role: "assistant",
-            content: "Hi! My name is Claude."
-          )
-        ]
+      expect(completion.choices.first).to have_attributes(
+        role: "assistant",
+        content: "Hi! My name is Claude."
       )
     end
 
-    it "has prompt_tokens" do
-      expect(completion.prompt_tokens).to eq(2095)
-    end
-
-    it "has completion_tokens" do
-      expect(completion.completion_tokens).to eq(503)
-    end
-
-    it "has total_tokens" do
-      expect(completion.total_tokens).to eq(2095 + 503)
+    it "has token usage" do
+      expect(completion).to have_attributes(
+        prompt_tokens: 2095,
+        completion_tokens: 503,
+        total_tokens: 2598
+      )
     end
   end
 
-  it "returns an authentication error", :auth_error do
-    expect { anthropic.complete(LLM::Message.new("user", "Hello!")) }.to raise_error(LLM::Error::Unauthorized)
+  context "with an unauthorized error", :unauthorized do
+    let(:completion) { anthropic.complete(LLM::Message.new("user", "Hello!")) }
+
+    it "raises an error" do
+      expect { completion }.to raise_error(LLM::Error::Unauthorized)
+    end
+
+    it "includes a response" do
+      completion
+    rescue LLM::Error::Unauthorized => ex
+      expect(ex.response).to be_kind_of(Net::HTTPResponse)
+    end
   end
 end

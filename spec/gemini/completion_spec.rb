@@ -54,7 +54,7 @@ RSpec.describe "LLM::Gemini" do
       )
   end
 
-  before(:each, :auth_error) do
+  before(:each, :unauthorized) do
     stub_request(:post, "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=")
       .with(headers: {"Content-Type" => "application/json"})
       .to_return(
@@ -83,6 +83,10 @@ RSpec.describe "LLM::Gemini" do
   context "with successful completion", :success do
     let(:completion) { gemini.complete(LLM::Message.new("user", "Hello!")) }
 
+    it "returns a completion" do
+      expect(completion).to be_a(LLM::Response::Completion)
+    end
+
     it "has model" do
       expect(completion.model).to eq("gemini-1.5-flash-001")
     end
@@ -98,20 +102,26 @@ RSpec.describe "LLM::Gemini" do
       )
     end
 
-    it "has prompt_tokens" do
-      expect(completion.prompt_tokens).to eq(2)
-    end
-
-    it "has completion_tokens" do
-      expect(completion.completion_tokens).to eq(10)
-    end
-
-    it "has total_tokens" do
-      expect(completion.total_tokens).to eq(12)
+    it "has token usage" do
+      expect(completion).to have_attributes(
+        prompt_tokens: 2,
+        completion_tokens: 10,
+        total_tokens: 12
+      )
     end
   end
 
-  it "returns an authentication error", :auth_error do
-    expect { gemini.complete(LLM::Message.new("user", "Hello!")) }.to raise_error(LLM::Error::Unauthorized)
+  context "with an unauthorized error", :unauthorized do
+    let(:completion) { gemini.complete(LLM::Message.new("user", "Hello!")) }
+
+    it "raises an error" do
+      expect { completion }.to raise_error(LLM::Error::Unauthorized)
+    end
+
+    it "includes a response" do
+      completion
+    rescue LLM::Error::Unauthorized => ex
+      expect(ex.response).to be_kind_of(Net::HTTPResponse)
+    end
   end
 end
