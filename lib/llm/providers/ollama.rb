@@ -2,8 +2,8 @@
 
 module LLM
   ##
-  # The OpenAI class implements a provider for
-  # [OpenAI](https://platform.openai.com/)
+  # The Ollama class implements a provider for
+  # [Ollama](https://ollama.ai/)
   class Ollama < Provider
     require_relative "ollama/error_handler"
     require_relative "ollama/response_parser"
