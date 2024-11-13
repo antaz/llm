@@ -39,7 +39,7 @@ RSpec.describe "LLM::OpenAI" do
   end
 
   context "with successful vision", :success do
-    let(:vision) { openai.vision("a white siamese cat") }
+    let(:vision) { openai.vision_generation("a white siamese cat") }
 
     it "returns a vision" do
       expect(vision).to be_a(LLM::Response::Vision)
