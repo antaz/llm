@@ -89,10 +89,19 @@ module LLM
 
     ##
     # @return [Module]
-    #  Returns the module responsible for parsing the LLM response
+    #  Returns the module responsible for parsing a successful LLM response
     # @raise [NotImplementedError]
     #  (see LLM::Provider#complete)
     def response_parser
+      raise NotImplementedError
+    end
+
+    ##
+    # @return [Class]
+    #  Returns the class responsible for handling an unsuccessful LLM response
+    # @raise [NotImplementedError]
+    #  (see LLM::Provider#complete)
+    def error_handler
       raise NotImplementedError
     end
 

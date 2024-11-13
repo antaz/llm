@@ -5,6 +5,7 @@ module LLM
   # The Anthropic class implements a provider for
   # [Anthropic](https://www.anthropic.com)
   class Anthropic < Provider
+    require_relative "anthropic/error_handler"
     require_relative "anthropic/response_parser"
 
     HOST = "api.anthropic.com"
@@ -60,6 +61,10 @@ module LLM
 
     def response_parser
       LLM::Anthropic::ResponseParser
+    end
+
+    def error_handler
+      LLM::Anthropic::ErrorHandler
     end
   end
 end

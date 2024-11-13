@@ -5,6 +5,7 @@ module LLM
   # The OpenAI class implements a provider for
   # [OpenAI](https://platform.openai.com/)
   class OpenAI < Provider
+    require_relative "openai/error_handler"
     require_relative "openai/response_parser"
 
     HOST = "api.openai.com"
@@ -53,6 +54,10 @@ module LLM
 
     def response_parser
       LLM::OpenAI::ResponseParser
+    end
+
+    def error_handler
+      LLM::OpenAI::ErrorHandler
     end
   end
 end
