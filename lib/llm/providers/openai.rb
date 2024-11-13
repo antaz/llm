@@ -36,7 +36,7 @@ module LLM
     end
 
     %w[generation edit variation].each do |action|
-      define_method "vision_#{action}" do |prompt, **params|
+      define_method :"vision_#{action}" do |prompt, **params|
         req = Net::HTTP::Post.new ["/v1", "images", "#{action}s"].join("/")
         body = {prompt:, model: "dall-e-3", n: 1}.merge!(params)
         req = preflight(req, body)
