@@ -15,24 +15,24 @@ module LLM
   ##
   # @param secret (see LLM::Anthropic#initialize)
   # @return (see LLM::Anthropic#initialize)
-  def anthropic(secret)
+  def anthropic(secret, **)
     require_relative "llm/providers/anthropic" unless defined?(LLM::Anthropic)
-    LLM::Anthropic.new(secret)
+    LLM::Anthropic.new(secret, **)
   end
 
   ##
   # @param secret (see LLM::Gemini#initialize)
   # @return (see LLM::Gemini#initialize)
-  def gemini(secret)
+  def gemini(secret, **)
     require_relative "llm/providers/gemini" unless defined?(LLM::Gemini)
-    LLM::Gemini.new(secret)
+    LLM::Gemini.new(secret, **)
   end
 
   ##
   # @param secret (see LLM::OpenAI#initialize)
   # @return (see LLM::OpenAI#initialize)
-  def openai(secret)
+  def openai(secret, **)
     require_relative "llm/providers/openai" unless defined?(LLM::OpenAI)
-    LLM::OpenAI.new(secret)
+    LLM::OpenAI.new(secret, **)
   end
 end
