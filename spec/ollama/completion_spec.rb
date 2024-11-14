@@ -6,7 +6,7 @@ RSpec.describe "LLM::Ollama" do
   subject(:ollama) { LLM.ollama("") }
 
   before(:each, :success) do
-    stub_request(:post, "https://localhost/api/chat")
+    stub_request(:post, "localhost:11434/api/chat")
       .with(headers: {"Content-Type" => "application/json"})
       .to_return(
         status: 200,

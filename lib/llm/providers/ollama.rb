@@ -9,12 +9,12 @@ module LLM
     require_relative "ollama/response_parser"
 
     HOST = "localhost"
-    DEFAULT_PARAMS = {model: "llama3.2", stream: "false"}.freeze
+    DEFAULT_PARAMS = {model: "llama3.2", stream: false}.freeze
 
     ##
     # @param secret (see LLM::Provider#initialize)
     def initialize(secret, **)
-      super(secret, host: HOST, **)
+      super(secret, host: HOST, port: 11434, ssl: false, **)
     end
 
     def complete(message, **params)
