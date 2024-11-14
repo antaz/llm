@@ -14,10 +14,10 @@ module LLM
     #  The host address of the LLM provider
     # @param [Integer] port
     #  The port number
-    def initialize(secret, host, port = 443)
+    def initialize(secret, host:, port: 443, ssl: true)
       @secret = secret
       @http = Net::HTTP.new(host, port).tap do |http|
-        http.use_ssl = true
+        http.use_ssl = ssl
       end
     end
 

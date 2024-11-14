@@ -13,8 +13,8 @@ module LLM
 
     ##
     # @param secret (see LLM::Provider#initialize)
-    def initialize(secret)
-      super(secret, HOST)
+    def initialize(secret, **)
+      super(secret, host: HOST, **)
     end
 
     def embed(input, **params)
