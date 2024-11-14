@@ -29,6 +29,14 @@ module LLM
   end
 
   ##
+  # @param host (see LLM::Ollama#initialize)
+  # @return (see LLM::Ollama#initialize)
+  def ollama(secret)
+    require_relative "llm/providers/ollama" unless defined?(LLM::Ollama)
+    LLM::Ollama.new(secret)
+  end
+
+  ##
   # @param secret (see LLM::OpenAI#initialize)
   # @return (see LLM::OpenAI#initialize)
   def openai(secret, **)
