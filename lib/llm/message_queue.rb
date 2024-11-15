@@ -1,13 +1,17 @@
 module LLM
-  class LazyThread
+  ##
+  # {LLM::MessageQueue LLM::MessageQueue} provides an Enumerable
+  # object that yields each message in a conversation on-demand,
+  # and only sends a request to the LLM when a response is needed.
+  class MessageQueue
     include Enumerable
 
     ##
     # @param [LLM::Provider] provider
-    # @return [LLM::LazyThread]
+    # @return [LLM::MessageQueue]
     def initialize(provider)
       @provider = provider
-      @thread = []
+      @messages = []
     end
 
     ##
@@ -16,8 +20,8 @@ module LLM
     # @raise (see LLM::Provider#complete)
     # @return [void]
     def each
-      @thread = complete! unless @thread.grep(LLM::Message).size == @thread.size
-      @thread.each { yield(_1) }
+      @messages = complete! unless @messages.grep(LLM::Message).size == @messages.size
+      @messages.each { yield(_1) }
     end
 
     ##
@@ -25,16 +29,16 @@ module LLM
     #  A message to add to the conversation thread
     # @return [void]
     def <<(message)
-      @thread << message
+      @messages << message
     end
     alias_method :push, :<<
 
     private
 
     def complete!
-      prompt, role, params = @thread[-1]
+      prompt, role, params = @messages[-1]
       mesg = LLM::Message.new(role, prompt)
-      rest = @thread[0..-2].map { (Array === _1) ? LLM::Message.new(_1[1], _1[0]) : _1 }
+      rest = @messages[0..-2].map { (Array === _1) ? LLM::Message.new(_1[1], _1[0]) : _1 }
       comp = @provider.complete(mesg, **params.merge(messages: rest)).choices.last
       [*rest, mesg, comp]
     end
