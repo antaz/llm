@@ -2,11 +2,12 @@
 
 module LLM
   class Message
-    attr_accessor :role, :content
+    attr_accessor :role, :content, :logprobs, :top_logprobs
 
-    def initialize(role, content)
+    def initialize(role, content, logprobs: nil)
       @role = role
       @content = content
+      @logprobs = logprobs
     end
 
     def to_h
