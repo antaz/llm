@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 require "llm"
 
-llm = LLM.openai("yourapikey")
+llm = LLM.openai(ENV["key"])
 bot = llm.chat! "be a helpful assistant", :system
 bot.chat "keep the answers short and sweet", :system
 bot.chat "help me choose a good book"
 bot.chat "books of poetry"
 bot.thread.each do |message|
-  print "[#{message.role}] ", message.text, "\n"
+  print "[#{message.role}] ", message.content, "\n"
 end
 
 ##

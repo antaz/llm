@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require "llm"
 
-llm = LLM.openai("yourapikey")
+llm = LLM.openai(ENV["key"])
 bot = llm.chat "keep the answer concise", :system
 bot.chat URI("https://upload.wikimedia.org/wikipedia/commons/b/be/Red_eyed_tree_frog_edit2.jpg")
 bot.chat "What is the frog's name?"
