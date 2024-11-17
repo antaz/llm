@@ -9,6 +9,7 @@ module LLM
     require_relative "anthropic/response_parser"
 
     HOST = "api.anthropic.com"
+    PATH = "/v1"
     DEFAULT_PARAMS = {model: "claude-3-5-sonnet-20240620"}.freeze
 
     ##
@@ -25,9 +26,9 @@ module LLM
       Response::Embedding.new(res.body, self)
     end
 
-    def complete(message, **params)
-      req = Net::HTTP::Post.new ["/v1", "messages"].join("/")
-      messages = [*(params.delete(:messages) || []), message]
+    def complete(prompt, role = :user, **params)
+      req = Net::HTTP::Post.new [PATH, "messages"].join("/")
+      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
       params = DEFAULT_PARAMS.merge(params)
       body = {messages: messages.map(&:to_h)}.merge!(params)
       req = preflight(req, body)

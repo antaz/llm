@@ -81,7 +81,7 @@ RSpec.describe "LLM::Gemini" do
   end
 
   context "with successful completion", :success do
-    let(:completion) { gemini.complete(LLM::Message.new("user", "Hello!")) }
+    let(:completion) { gemini.complete("Hello!") }
 
     it "returns a completion" do
       expect(completion).to be_a(LLM::Response::Completion)
@@ -112,7 +112,7 @@ RSpec.describe "LLM::Gemini" do
   end
 
   context "with an unauthorized error", :unauthorized do
-    let(:completion) { gemini.complete(LLM::Message.new("user", "Hello!")) }
+    let(:completion) { gemini.complete("Hello!") }
 
     it "raises an error" do
       expect { completion }.to raise_error(LLM::Error::Unauthorized)
