@@ -10,6 +10,10 @@ module LLM
       @extra = extra
     end
 
+    ##
+    # @see https://platform.openai.com/docs/api-reference/chat/object logprobs docs
+    # Returns log probabilities
+    # @return [Hash]
     def logprobs
       @extra[:logprobs]
     end
