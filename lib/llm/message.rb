@@ -11,7 +11,7 @@ module LLM
     end
 
     ##
-    # @see https://platform.openai.com/docs/api-reference/chat/object logprobs docs
+    # @see https://platform.openai.com/docs/api-reference/chat/object#chat/object-choices logprobs docs
     # Returns log probabilities
     # @return [Hash]
     def logprobs
