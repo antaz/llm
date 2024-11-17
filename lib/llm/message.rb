@@ -12,6 +12,8 @@ module LLM
 
     ##
     # @see https://platform.openai.com/docs/api-reference/chat/object#chat/object-choices logprobs docs
+    # @see https://cookbook.openai.com/examples/using_logprobs logprobs cookbook
+    # @note logprobs are specific to OpenAI for now
     # Returns log probabilities
     # @return [Hash]
     def logprobs
