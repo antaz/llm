@@ -11,16 +11,18 @@ module LLM
   #   bot = llm.chat("What is the capital of France?")
   #   bot.chat("What should we eat in Paris?")
   #   bot.chat("What is the weather like in Paris?")
-  #   p bot.thread.map { [_1.role, _1.content] }
+  #   p bot.messages.map { [_1.role, _1.content] }
   class Conversation
-    attr_reader :thread
+    ##
+    # @return [Array<LLM::Message>]
+    attr_reader :messages
 
     ##
     # @param [LLM::Provider] provider
     #  A provider
     def initialize(provider)
       @provider = provider
-      @thread = []
+      @messages = []
     end
 
     ##
@@ -30,7 +32,7 @@ module LLM
       tap do
         prompt = transform_prompt(prompt)
         completion = @provider.complete(Message.new(role, prompt), **params)
-        @thread.concat [Message.new(role.to_s, prompt), completion.choices.first]
+        @messages.concat [Message.new(role.to_s, prompt), completion.choices[0]]
       end
     end
 

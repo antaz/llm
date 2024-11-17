@@ -4,7 +4,28 @@ A lightweight Ruby library for interacting with multiple LLM providers
 
 ## Examples
 
-### LazyConversation
+### Providers
+
+#### Introduction
+
+All providers inherit from [`LLM::Provider`](https://0x1eef.github.io/x/llm/LLM/Provider.html).
+They share a common interface and set of functionality between them. They can be
+instantiated with an API key and an (optional) set of options via the
+[the singleton methods of LLM](https://0x1eef.github.io/x/llm/LLM.html).
+For example:
+
+```ruby
+#!/usr/bin/env ruby
+require "llm"
+llm = LLM.openai("yourapikey", <options>)
+llm = LLM.anthropic("yourapikey", <options>)
+llm = LLM.ollama(nil, <options>)
+# etc ...
+```
+
+### Completion API
+
+#### LazyConversation
 
 The
 [`LLM::Provider#chat`](https://0x1eef.github.io/x/llm/LLM/Provider.html#chat-instance_method)
@@ -12,8 +33,8 @@ method returns a
 [`LLM::LazyConversation`](https://0x1eef.github.io/x/llm/LLM/LazyConversation.html)
 object
 that can maintain a "lazy" conversation where input prompts are sent to the
-provider only when needed. Once a conversation is initiated it will maintain a
-thread of messages that provide the LLM with a certain amount of extra context
+provider only when neccessary. Once a conversation is initiated it will maintain a
+thread of messages that provide the LLM with a certain amount of extra information
 that can be re-used within the conversation:
 
 ```ruby
@@ -26,11 +47,10 @@ bot.chat URI("https://upload.wikimedia.org/wikipedia/commons/b/be/Red_eyed_tree_
 bot.chat "What is the frog's name?"
 bot.chat "What is the frog's habitat?"
 bot.chat "What is the frog's diet?"
-
-##
-# At this point a single request is made to the provider
-# See 'LLM::LazyThread#each' for more details
-bot.thread.each do |message|
+bot.messages.each do |message|
+  ##
+  # At this point a single request is made to the provider
+  # See 'LLM::MessageQueue' for more details
   print "[#{message.role}] ", message.content, "\n"
 end
 
@@ -49,7 +69,7 @@ end
 #   - Primarily insectivorous, feeding on insects like crickets and moths.
 ```
 
-### Conversation
+#### Conversation
 
 The
 [`LLM::Provider#chat`](https://0x1eef.github.io/x/llm/LLM/Provider.html#chat!-instance_method)
@@ -68,7 +88,7 @@ bot = llm.chat! "be a helpful assistant", :system
 bot.chat "keep the answers short and sweet", :system
 bot.chat "help me choose a good book"
 bot.chat "books of poetry"
-bot.thread.each do |message|
+bot.messages.each do |message|
   print "[#{message.role}] ", message.content, "\n"
 end
 
