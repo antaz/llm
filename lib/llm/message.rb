@@ -4,7 +4,7 @@ module LLM
   class Message
     attr_accessor :role, :content
 
-    def initialize(role, content, extra = nil)
+    def initialize(role, content, extra = {})
       @role = role
       @content = content
       @extra = extra
