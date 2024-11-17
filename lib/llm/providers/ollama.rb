@@ -31,7 +31,9 @@ module LLM
     # @param prompt (see LLM::Provider#transform_prompt)
     # @return (see LLM::Provider#transform_prompt)
     def transform_prompt(prompt)
-      if URI === prompt
+      if LLM::File === prompt
+        raise TypeError, "#{self.class} does not support LLM::File objects"
+      elsif URI === prompt
         [{type: :image_url, image_url: {url: prompt.to_s}}]
       else
         prompt

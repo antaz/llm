@@ -29,19 +29,33 @@ module LLM
       Response::Embedding.new(res.body, self)
     end
 
+    ##
+    # @see https://ai.google.dev/api/generate-content#v1beta.models.generateContent Gemini docs
+    # @param prompt (see LLM::Provider#complete)
+    # @param role (see LLM::Provider#complete)
+    # @return (see LLM::Provider#complete)
     def complete(prompt, role = :user, **params)
       params = DEFAULT_PARAMS.merge(params)
       path = ["/v1beta/models", params.delete(:model)].join("/")
       req = Net::HTTP::Post.new [path, "generateContent"].join(":")
-      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
-      body = {
-        contents: [{
-          parts: messages.map { |m| {text: m.content} }
-        }]
-      }
+      messages = [*(params.delete(:messages) || []), LLM::Message.new(role, transform_prompt(prompt))]
+      body = { contents: [{ parts: messages.map { _1.to_h[:content] } }] }
       req = preflight(req, body)
-      res = request @http, req
+      res = request(@http, req)
       Response::Completion.new(res.body, self).extend(response_parser)
+    end
+
+    ##
+    # @param prompt (see LLM::Provider#transform_prompt)
+    # @return (see LLM::Provider#transform_prompt)
+    def transform_prompt(prompt)
+      if LLM::File === prompt
+        file = prompt
+        inline_data = {mime_type: file.mime_type, data: file.to_base64}
+        {inline_data:}
+      else
+        {text: prompt}
+      end
     end
 
     private
