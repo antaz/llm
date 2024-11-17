@@ -49,8 +49,7 @@ RSpec.describe "LLM::Anthropic" do
   end
 
   context "with successful completion", :success do
-    let(:message) { LLM::Message.new("user", "Hello, world") }
-    let(:completion) { anthropic.complete(message) }
+    let(:completion) { anthropic.complete("Hello, world") }
 
     it "returns a completion" do
       expect(completion).to be_a(LLM::Response::Completion)
@@ -77,7 +76,7 @@ RSpec.describe "LLM::Anthropic" do
   end
 
   context "with an unauthorized error", :unauthorized do
-    let(:completion) { anthropic.complete(LLM::Message.new("user", "Hello!")) }
+    let(:completion) { anthropic.complete("Hello!") }
 
     it "raises an error" do
       expect { completion }.to raise_error(LLM::Error::Unauthorized)

@@ -17,9 +17,9 @@ module LLM
       super(secret, host: HOST, port: 11434, ssl: false, **)
     end
 
-    def complete(message, **params)
+    def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new ["/api", "chat"].join("/")
-      messages = [*(params.delete(:messages) || []), message]
+      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
       params = DEFAULT_PARAMS.merge(params)
       body = {messages: messages.map(&:to_h)}.merge!(params)
       req = preflight(req, body)

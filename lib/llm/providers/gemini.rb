@@ -29,11 +29,11 @@ module LLM
       Response::Embedding.new(res.body, self)
     end
 
-    def complete(message, **params)
+    def complete(prompt, role = :user, **params)
       params = DEFAULT_PARAMS.merge(params)
       path = ["/v1beta/models", params.delete(:model)].join("/")
       req = Net::HTTP::Post.new [path, "generateContent"].join(":")
-      messages = [*(params.delete(:messages) || []), message]
+      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
       body = {
         contents: [{
           parts: messages.map { |m| {text: m.content} }

@@ -28,9 +28,9 @@ module LLM
       Response::Embedding.new(res.body, self)
     end
 
-    def complete(message, **params)
+    def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new ["/v1", "chat", "completions"].join("/")
-      messages = [*(params.delete(:messages) || []), message]
+      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
       params = DEFAULT_PARAMS.merge(params)
       body = {messages: messages.map(&:to_h)}.merge!(params)
       req = preflight(req, body)
