@@ -11,7 +11,7 @@ module LLM
     end
 
     def logprobs
-      extra[:logprobs]
+      @extra[:logprobs]
     end
 
     def to_h
