@@ -53,8 +53,10 @@ module LLM
         file = prompt
         inline_data = {mime_type: file.mime_type, data: file.to_base64}
         {inline_data:}
-      else
+      elsif String === prompt
         {text: prompt}
+      else
+        raise TypeError, "#{self.class} does not support #{prompt.class} objects"
       end
     end
 
