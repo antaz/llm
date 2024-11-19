@@ -24,7 +24,7 @@ module LLM
     # @return (see LLM::Provider#complete)
     def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new ["/api", "chat"].join("/")
-      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
+      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, transform_prompt(prompt))]
       params = DEFAULT_PARAMS.merge(params)
       body = {messages: messages.map(&:to_h)}.merge!(params)
       req = preflight(req, body)
