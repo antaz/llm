@@ -17,6 +17,11 @@ module LLM
       super(secret, host: HOST, port: 11434, ssl: false, **)
     end
 
+    ##
+    # @see https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-chat-completion Ollama docs
+    # @param prompt (see LLM::Provider#complete)
+    # @param role (see LLM::Provider#complete)
+    # @return (see LLM::Provider#complete)
     def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new ["/api", "chat"].join("/")
       messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]

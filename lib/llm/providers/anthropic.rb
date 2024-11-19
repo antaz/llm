@@ -28,6 +28,11 @@ module LLM
       Response::Embedding.new(res.body, self)
     end
 
+    ##
+    # @see https://docs.anthropic.com/en/api/messages Anthropic docs
+    # @param prompt (see LLM::Provider#complete)
+    # @param role (see LLM::Provider#complete)
+    # @return (see LLM::Provider#complete)
     def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new ["/v1", "messages"].join("/")
       messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
