@@ -56,7 +56,7 @@ end
 
 ##
 # [system] keep the answer concise
-# [user] [{:type=>:image_url, :image_url=>{:url=>"https://upload.wikimedia.org/wikipedia/commons/b/be/Red_eyed_tree_frog_edit2.jpg"}}]
+# [user] https://upload.wikimedia.org/wikipedia/commons/b/be/Red_eyed_tree_frog_edit2.jpg
 # [user] What is the frog's name?
 # [user] What is the frog's habitat?
 # [user] What is the frog's diet?
