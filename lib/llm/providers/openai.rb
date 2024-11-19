@@ -28,6 +28,11 @@ module LLM
       Response::Embedding.new(res.body, self)
     end
 
+    ##
+    # @see https://platform.openai.com/docs/api-reference/chat/create OpenAI docs
+    # @param prompt (see LLM::Provider#complete)
+    # @param role (see LLM::Provider#complete)
+    # @return (see LLM::Provider#complete)
     def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new ["/v1", "chat", "completions"].join("/")
       messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
@@ -44,8 +49,10 @@ module LLM
     def transform_prompt(prompt)
       if URI === prompt
         [{type: :image_url, image_url: {url: prompt.to_s}}]
-      else
+      elsif String === prompt
         prompt
+      else
+        raise TypeError, "#{self.class} does not support #{prompt.class} objects"
       end
     end
 

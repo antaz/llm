@@ -17,9 +17,14 @@ module LLM
       super(secret, host: HOST, port: 11434, ssl: false, **)
     end
 
+    ##
+    # @see https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-chat-completion Ollama docs
+    # @param prompt (see LLM::Provider#complete)
+    # @param role (see LLM::Provider#complete)
+    # @return (see LLM::Provider#complete)
     def complete(prompt, role = :user, **params)
       req = Net::HTTP::Post.new ["/api", "chat"].join("/")
-      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, prompt)]
+      messages = [*(params.delete(:messages) || []), Message.new(role.to_s, transform_prompt(prompt))]
       params = DEFAULT_PARAMS.merge(params)
       body = {messages: messages.map(&:to_h)}.merge!(params)
       req = preflight(req, body)
@@ -33,8 +38,10 @@ module LLM
     def transform_prompt(prompt)
       if URI === prompt
         [{type: :image_url, image_url: {url: prompt.to_s}}]
-      else
+      elsif String === prompt
         prompt
+      else
+        raise TypeError, "#{self.class} does not support #{prompt.class} objects"
       end
     end
 

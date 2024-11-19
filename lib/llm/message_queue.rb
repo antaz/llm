@@ -37,10 +37,9 @@ module LLM
 
     def complete!
       prompt, role, params = @messages[-1]
-      mesg = LLM::Message.new(role, prompt)
       rest = @messages[0..-2].map { (Array === _1) ? LLM::Message.new(_1[1], _1[0]) : _1 }
-      comp = @provider.complete(mesg, **params.merge(messages: rest))
-      [*rest, mesg, comp.choices[0]]
+      comp = @provider.complete(prompt, role, **params.merge(messages: rest))
+      [*rest, LLM::Message.new(role, prompt), comp.choices[0]]
     end
   end
 end

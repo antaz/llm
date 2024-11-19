@@ -73,7 +73,7 @@ module LLM
     end
 
     ##
-    # Transforms the prompt before sending it
+    # Transforms a completion prompt before sending it to the LLM
     # @param [String, URI, Object] prompt
     #  The prompt to transform
     # @return [Object]

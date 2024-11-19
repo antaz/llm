@@ -96,7 +96,9 @@ RSpec.describe "LLM::Gemini" do
         choices: [
           have_attributes(
             role: "model",
-            content: "Hello! How can I help you today? \n"
+            content: {
+              text: "Hello! How can I help you today? \n"
+            }
           )
         ]
       )
