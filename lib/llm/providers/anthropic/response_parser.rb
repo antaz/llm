@@ -20,7 +20,8 @@ class LLM::Anthropic
       {
         model: raw["model"],
         choices: raw["content"].map do
-          LLM::Message.new(raw["role"], _1["text"])
+          stop_reason = raw["stop_reason"]
+          LLM::Message.new(raw["role"], _1["text"], {stop_reason:})
         end,
         prompt_tokens: raw.dig("usage", "input_tokens"),
         completion_tokens: raw.dig("usage", "output_tokens")
