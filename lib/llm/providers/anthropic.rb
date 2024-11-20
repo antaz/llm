@@ -51,11 +51,7 @@ module LLM
         file = prompt
         [{
           type: :image,
-          source: {
-            type: :base64,
-            media_type: file.mime_type,
-            data: file.to_base64
-          }
+          source: {type: :base64, media_type: file.mime_type, data: file.to_base64}
         }]
       elsif String === prompt
         prompt
