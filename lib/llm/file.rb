@@ -74,6 +74,7 @@ class LLM::File
 end
 
 ##
+# Currently only supported with Gemini and Anthropic APIs.
 # @example
 # llm = LLM.gemini(key)
 # bot = llm.chat LLM::File("/path/to/image.png")
