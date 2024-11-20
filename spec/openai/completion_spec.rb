@@ -102,6 +102,10 @@ RSpec.describe "LLM::OpenAI" do
         total_tokens: 18
       )
     end
+
+    it "has stop reason" do
+      expect(completion.choices.first.stop_reason).to eq("stop")
+    end
   end
 
   context "with an unauthorized error", :unauthorized do
