@@ -47,14 +47,11 @@ module LLM
     # @param prompt (see LLM::Provider#transform_prompt)
     # @return (see LLM::Provider#transform_prompt)
     def transform_prompt(prompt)
-      if URI === prompt
+      if LLM::File === prompt
+        file = prompt
         [{
           type: :image,
-          source: {
-            type: :base64,
-            media_type: prompt.content_type,
-            data: [prompt.to_s].pack("m0")
-          }
+          source: {type: :base64, media_type: file.mime_type, data: file.to_base64}
         }]
       elsif String === prompt
         prompt
