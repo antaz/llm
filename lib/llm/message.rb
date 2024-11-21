@@ -20,6 +20,13 @@ module LLM
       @extra[:logprobs]
     end
 
+    ##
+    # Returns the stop reason
+    # @return [String]
+    def stop_reason
+      @extra[:stop_reason]
+    end
+
     def to_h
       {role:, content:}
     end

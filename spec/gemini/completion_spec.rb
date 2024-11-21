@@ -111,6 +111,10 @@ RSpec.describe "LLM::Gemini" do
         total_tokens: 12
       )
     end
+
+    it "has stop_reason" do
+      expect(completion.choices.first.stop_reason).to eq("STOP")
+    end
   end
 
   context "with an unauthorized error", :unauthorized do

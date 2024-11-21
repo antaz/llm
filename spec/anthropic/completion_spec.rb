@@ -73,6 +73,10 @@ RSpec.describe "LLM::Anthropic" do
         total_tokens: 2598
       )
     end
+
+    it "has stop reason" do
+      expect(completion.choices.first.stop_reason).to eq("end_turn")
+    end
   end
 
   context "with an unauthorized error", :unauthorized do

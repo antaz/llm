@@ -18,6 +18,7 @@ RSpec.describe "LLM::Ollama" do
             "content": "Hello! How are you today?"
           },
           "done": true,
+          "done_reason": "stop",
           "total_duration": 5191566416,
           "load_duration": 2154458,
           "prompt_eval_count": 26,
@@ -86,6 +87,10 @@ RSpec.describe "LLM::Ollama" do
         completion_tokens: 298,
         total_tokens: 324
       )
+    end
+
+    it "has stop reason for first choice" do
+      expect(completion.choices.first.stop_reason).to eq("stop")
     end
   end
 
