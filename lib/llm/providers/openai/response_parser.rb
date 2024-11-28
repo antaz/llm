@@ -26,5 +26,13 @@ class LLM::OpenAI
         total_tokens: raw.dig("usage", "total_tokens")
       }
     end
+
+    def parse_vision(raw)
+      {
+        images: raw["data"].map do
+          URI(_1["url"])
+        end
+      }
+    end
   end
 end
