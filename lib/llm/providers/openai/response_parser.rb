@@ -26,5 +26,18 @@ class LLM::OpenAI
         total_tokens: raw.dig("usage", "total_tokens")
       }
     end
+
+    ##
+    # @param [Hash] raw
+    #  The raw response from the LLM provider
+    # @return [Hash]
+    def parse_completion_chunk(raw)
+      {
+        model: raw["model"],
+        choices: raw["choices"].map do
+          LLM::Message.new(*_1["delta"].values_at("role", "content"))
+        end
+      }
+    end
   end
 end
